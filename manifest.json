@@ -1,0 +1,22 @@
+{
+  "name": "Aegis",
+  "short_name": "Aegis",
+  "description": "A static utility toolkit with everyday tools for text, time, numbers, units, and quick sharing.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#080b10",
+  "theme_color": "#07131b",
+  "icons": [
+    {
+      "src": "./assets/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

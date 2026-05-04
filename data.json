@@ -1,0 +1,52 @@
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://charlemagne404.github.io/Aegis/#organization",
+      "name": "Continental Studios",
+      "url": "https://charlemagne404.github.io/Aegis/",
+      "logo": "https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://charlemagne404.github.io/Aegis/#website",
+      "url": "https://charlemagne404.github.io/Aegis/",
+      "name": "Aegis",
+      "description": "A clean utility toolkit with everyday tools for time, text, numbers, units, and network checks.",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://charlemagne404.github.io/Aegis/#organization"
+      }
+    },
+    {
+      "@type": "WebApplication",
+      "@id": "https://charlemagne404.github.io/Aegis/#webapp",
+      "url": "https://charlemagne404.github.io/Aegis/",
+      "name": "Aegis",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "description": "A static browser toolkit with utilities for passwords, text conversion, counting, QR generation, timezones, timers, random values, and unit conversion.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "featureList": [
+        "Password generator",
+        "Text case converter",
+        "Character and word counter",
+        "QR code generator",
+        "Mock speed test",
+        "Timezone converter",
+        "Timer and stopwatch",
+        "Random number generator",
+        "Unit converter"
+      ],
+      "publisher": {
+        "@id": "https://charlemagne404.github.io/Aegis/#organization"
+      }
+    }
+  ]
+}

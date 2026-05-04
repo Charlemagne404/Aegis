@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aegis | Utility Toolkit</title>
+  <meta name="description" content="Aegis is a clean utility toolkit from Continental Studios with everyday tools for time, numbers, units, and network checks.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="theme-color" content="#07131b">
+  <meta name="application-name" content="Aegis">
+  <link rel="canonical" href="https://charlemagne404.github.io/Aegis/">
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="./favicon.png" type="image/png" sizes="64x64">
+  <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="alternate" type="application/json" href="./data.json" title="Aegis structured data">
+  <link rel="stylesheet" href="styles.css">
+  <script src="js/theme-init.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Skip to content</a>
+
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Primary navigation">
+      <a class="brand-link aegis-brand" href="#home" aria-label="Aegis home">
+        <span class="aegis-brand-mark" aria-hidden="true">
+          <img src="assets/aegis-mark.svg" alt="" width="36" height="36">
+        </span>
+        <span class="brand-copy">
+          <strong>Aegis</strong>
+          <small>by Continental</small>
+        </span>
+      </a>
+
+      <div class="top-tool-tabs" id="top-tool-tabs" role="tablist" aria-label="Tools"></div>
+
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
+        <span data-theme-label>Theme</span>
+      </button>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="intro-section" id="home">
+      <div class="hero-copy">
+        <h1>Aegis</h1>
+        <p class="hero-lede">Everyday tools in one calm workspace.</p>
+      </div>
+    </section>
+
+    <section class="workbench-section" id="workbench" aria-label="Tool workspace">
+      <div class="tool-panels">
+        <article class="tool-panel" id="password" data-tool-panel="password" aria-labelledby="password-title">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Security</p>
+              <h3 id="password-title">Password generator</h3>
+            </div>
+            <button class="button button-primary" type="button" id="password-generate">Generate</button>
+          </div>
+
+          <div class="password-layout">
+            <section class="tool-subpanel" aria-labelledby="password-options-title">
+              <div class="subpanel-heading">
+                <h4 id="password-options-title">Options</h4>
+                <span id="password-length-label">18 characters</span>
+              </div>
+              <label>
+                <span>Length</span>
+                <input type="range" id="password-length" min="8" max="64" value="18">
+              </label>
+              <div class="form-grid password-options-grid">
+                <label class="checkbox-field">
+                  <input type="checkbox" id="password-lowercase" checked>
+                  <span>Lowercase</span>
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="password-uppercase" checked>
+                  <span>Uppercase</span>
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="password-numbers" checked>
+                  <span>Numbers</span>
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="password-symbols" checked>
+                  <span>Symbols</span>
+                </label>
+              </div>
+            </section>
+
+            <section class="tool-subpanel" aria-labelledby="password-output-title">
+              <div class="subpanel-heading">
+                <h4 id="password-output-title">Result</h4>
+                <span id="password-strength-label">Strong</span>
+              </div>
+              <div class="result-card password-result" id="password-output" aria-live="polite"></div>
+              <div class="strength-meter" aria-label="Password strength">
+                <span id="password-strength-bar"></span>
+              </div>
+              <div class="button-row">
+                <button class="button button-secondary" type="button" id="password-copy">Copy</button>
+                <span class="inline-status" id="password-status"></span>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="case" data-tool-panel="case" aria-labelledby="case-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Text</p>
+              <h3 id="case-title">Text case converter</h3>
+            </div>
+          </div>
+
+          <div class="text-tool-layout">
+            <label>
+              <span>Input text</span>
+              <textarea id="case-input" rows="9" placeholder="Type or paste text to convert.">Aegis utility toolkit</textarea>
+            </label>
+            <section class="tool-subpanel" aria-labelledby="case-preview-title">
+              <div class="subpanel-heading">
+                <h4 id="case-preview-title">Preview</h4>
+                <span id="case-mode-label">lowercase</span>
+              </div>
+              <div class="mode-row" role="group" aria-label="Case conversion mode">
+                <button class="mode-button" type="button" data-case-mode="lower" aria-pressed="true">lowercase</button>
+                <button class="mode-button" type="button" data-case-mode="upper" aria-pressed="false">UPPERCASE</button>
+                <button class="mode-button" type="button" data-case-mode="title" aria-pressed="false">Title Case</button>
+                <button class="mode-button" type="button" data-case-mode="camel" aria-pressed="false">camelCase</button>
+                <button class="mode-button" type="button" data-case-mode="snake" aria-pressed="false">snake_case</button>
+              </div>
+              <div class="result-card text-preview" id="case-output" aria-live="polite"></div>
+            </section>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="counter" data-tool-panel="counter" aria-labelledby="counter-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Text</p>
+              <h3 id="counter-title">Character and word counter</h3>
+            </div>
+          </div>
+
+          <div class="text-tool-layout">
+            <label>
+              <span>Text</span>
+              <textarea id="counter-input" rows="10" placeholder="Type or paste text to count."></textarea>
+            </label>
+            <div class="counter-grid" aria-live="polite">
+              <div class="counter-card">
+                <span>Characters</span>
+                <strong id="counter-characters">0</strong>
+              </div>
+              <div class="counter-card">
+                <span>Words</span>
+                <strong id="counter-words">0</strong>
+              </div>
+              <div class="counter-card">
+                <span>Sentences</span>
+                <strong id="counter-sentences">0</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="qr" data-tool-panel="qr" aria-labelledby="qr-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Share</p>
+              <h3 id="qr-title">QR code generator</h3>
+            </div>
+            <button class="button button-secondary" type="button" id="qr-download">Download PNG</button>
+          </div>
+
+          <div class="qr-layout">
+            <label>
+              <span>Text or URL</span>
+              <textarea id="qr-input" rows="8" placeholder="Enter text or a URL.">https://continental.studio</textarea>
+            </label>
+            <section class="tool-subpanel qr-preview-panel" aria-labelledby="qr-preview-title">
+              <div class="subpanel-heading">
+                <h4 id="qr-preview-title">QR code</h4>
+                <span id="qr-status">Ready</span>
+              </div>
+              <div class="qr-canvas-frame">
+                <canvas id="qr-canvas" width="768" height="768" aria-label="Generated QR code"></canvas>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="speed" data-tool-panel="speed" aria-labelledby="speed-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Network</p>
+              <h3 id="speed-title">Speed test</h3>
+            </div>
+            <button class="button button-primary" type="button" id="speed-start">Run mock test</button>
+          </div>
+
+          <div class="speed-layout">
+            <div class="speed-gauge" aria-label="Mock speed test progress">
+              <div class="gauge-ring">
+                <span id="speed-progress">0%</span>
+              </div>
+              <p id="speed-phase">Waiting</p>
+            </div>
+            <div class="metric-list">
+              <div class="metric-row">
+                <span>Ping</span>
+                <strong><span id="speed-ping">--</span> ms</strong>
+              </div>
+              <div class="metric-row">
+                <span>Download</span>
+                <strong><span id="speed-download">--</span> Mbps</strong>
+              </div>
+              <div class="metric-row">
+                <span>Upload</span>
+                <strong><span id="speed-upload">--</span> Mbps</strong>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="timezone" data-tool-panel="timezone" aria-labelledby="timezone-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Time</p>
+              <h3 id="timezone-title">Timezones</h3>
+            </div>
+          </div>
+
+          <div class="form-grid timezone-grid">
+            <label>
+              <span>Date and time</span>
+              <input type="datetime-local" id="timezone-input">
+            </label>
+            <label>
+              <span>From</span>
+              <select id="timezone-from"></select>
+            </label>
+            <label>
+              <span>To</span>
+              <select id="timezone-to"></select>
+            </label>
+          </div>
+
+          <div class="result-card" id="timezone-result" aria-live="polite"></div>
+          <div class="clock-grid" id="timezone-clocks"></div>
+        </article>
+
+        <article class="tool-panel" id="timer" data-tool-panel="timer" aria-labelledby="timer-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Time</p>
+              <h3 id="timer-title">Timer</h3>
+            </div>
+          </div>
+
+          <div class="timer-layout">
+            <section class="tool-subpanel" aria-labelledby="countdown-title">
+              <div class="subpanel-heading">
+                <h4 id="countdown-title">Countdown</h4>
+                <span id="timer-status">Idle</span>
+              </div>
+              <div class="time-display" id="timer-display">00:05:00</div>
+              <div class="duration-inputs" aria-label="Countdown duration">
+                <label>
+                  <span>Hours</span>
+                  <input type="number" id="timer-hours" min="0" max="99" value="0">
+                </label>
+                <label>
+                  <span>Minutes</span>
+                  <input type="number" id="timer-minutes" min="0" max="59" value="5">
+                </label>
+                <label>
+                  <span>Seconds</span>
+                  <input type="number" id="timer-seconds" min="0" max="59" value="0">
+                </label>
+              </div>
+              <div class="button-row">
+                <button class="button button-primary" type="button" id="timer-start">Start</button>
+                <button class="button button-secondary" type="button" id="timer-pause">Pause</button>
+                <button class="button button-ghost" type="button" id="timer-reset">Reset</button>
+              </div>
+            </section>
+
+            <section class="tool-subpanel" aria-labelledby="stopwatch-title">
+              <div class="subpanel-heading">
+                <h4 id="stopwatch-title">Stopwatch</h4>
+                <span id="stopwatch-status">Idle</span>
+              </div>
+              <div class="time-display" id="stopwatch-display">00:00:00.00</div>
+              <div class="button-row">
+                <button class="button button-primary" type="button" id="stopwatch-start">Start</button>
+                <button class="button button-secondary" type="button" id="stopwatch-lap">Lap</button>
+                <button class="button button-ghost" type="button" id="stopwatch-reset">Reset</button>
+              </div>
+              <ol class="lap-list" id="lap-list" aria-live="polite"></ol>
+            </section>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="random" data-tool-panel="random" aria-labelledby="random-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Numbers</p>
+              <h3 id="random-title">Random number</h3>
+            </div>
+            <button class="button button-primary" type="button" id="random-generate">Generate</button>
+          </div>
+
+          <div class="form-grid random-grid">
+            <label>
+              <span>Minimum</span>
+              <input type="number" id="random-min" value="1">
+            </label>
+            <label>
+              <span>Maximum</span>
+              <input type="number" id="random-max" value="100">
+            </label>
+            <label>
+              <span>Quantity</span>
+              <input type="number" id="random-count" min="1" max="100" value="1">
+            </label>
+            <label class="checkbox-field">
+              <input type="checkbox" id="random-unique">
+              <span>Unique values</span>
+            </label>
+          </div>
+
+          <div class="result-card random-result" id="random-result" aria-live="polite">42</div>
+          <div class="button-row">
+            <button class="button button-secondary" type="button" id="random-copy">Copy result</button>
+            <span class="inline-status" id="random-status"></span>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="converter" data-tool-panel="converter" aria-labelledby="converter-title" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Measure</p>
+              <h3 id="converter-title">Unit converter</h3>
+            </div>
+          </div>
+
+          <div class="form-grid converter-grid">
+            <label>
+              <span>Category</span>
+              <select id="unit-category"></select>
+            </label>
+            <label>
+              <span>Value</span>
+              <input type="number" id="unit-value" value="1" step="any">
+            </label>
+            <label>
+              <span>From</span>
+              <select id="unit-from"></select>
+            </label>
+            <label>
+              <span>To</span>
+              <select id="unit-to"></select>
+            </label>
+          </div>
+
+          <div class="result-card converter-result" id="unit-result" aria-live="polite"></div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-meta">
+      <div class="continental-signature" aria-label="A Continental Studios production">
+        <span class="continental-signature-copy">
+          <span>A Continental Studios production</span>
+          <img src="assets/branding/continental-wordmark-white.png" alt="Continental" width="172" height="28">
+        </span>
+      </div>
+      <nav class="footer-links" aria-label="Legal and site links">
+        <a href="./privacy-policy.html">Privacy</a>
+        <a href="./terms-of-service.html">Terms</a>
+        <a href="./sitemap.xml">Sitemap</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
