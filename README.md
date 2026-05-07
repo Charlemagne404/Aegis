@@ -5,10 +5,13 @@ Aegis is a static utility toolkit website built in the Continental project style
 Included tools:
 
 - Password generator with strength checking and clipboard copy
+- Hash generator for text and local files with MD5 and SHA output
 - Text case converter
 - Character, word, and sentence counter
+- JSON formatter and validator with minify/export controls
+- Base64 and URL encoder-decoder
 - QR code generator with PNG download
-- Connection speed test shell, timezone converter, timer, random number generator, and unit converter
+- Connection speed test shell, timezone converter, date/timestamp tools, timer, random number generator, UUID generator, and unit converter
 - Tool search, favorites, recent tools, shareable stateful links, and saved presets/history for repeatable tools
 - Timer alerts with browser notifications, sound, and vibration
 

@@ -12,17 +12,22 @@ const STORAGE_KEYS = {
 
 const NAV_LABELS = {
   password: 'Password',
+  hash: 'Hash',
   case: 'Case',
   counter: 'Counter',
+  json: 'JSON',
+  encode: 'Encode',
   qr: 'QR',
   speed: 'Speed Test',
   timezone: 'Timezones',
+  datetime: 'Dates',
   timer: 'Timer',
   random: 'Random',
+  uuid: 'UUID',
   converter: 'Units',
 };
 
-const PRESET_TOOL_IDS = new Set(['password', 'qr', 'timezone', 'timer', 'random', 'converter']);
+const PRESET_TOOL_IDS = new Set(['password', 'hash', 'json', 'encode', 'qr', 'timezone', 'datetime', 'timer', 'random', 'uuid', 'converter']);
 const PRIMARY_TOOLS = TOOLS.filter((tool) => tool.primary !== false);
 
 const state = {
@@ -37,6 +42,7 @@ const state = {
   workspaceStatusTimers: new Map(),
   audioContext: null,
   searchOpen: false,
+  toolDrawerOpen: false,
 };
 
 const TOOL_STATE_ADAPTERS = {
@@ -47,6 +53,7 @@ const TOOL_STATE_ADAPTERS = {
       uppercase: 'pw_up',
       numbers: 'pw_num',
       symbols: 'pw_sym',
+      ambiguous: 'pw_amb',
     },
     getState: () => ({
       length: Number($('#password-length')?.value || 18),
@@ -54,17 +61,19 @@ const TOOL_STATE_ADAPTERS = {
       uppercase: $('#password-uppercase')?.checked ?? true,
       numbers: $('#password-numbers')?.checked ?? true,
       symbols: $('#password-symbols')?.checked ?? true,
+      ambiguous: $('#password-ambiguous')?.checked ?? false,
     }),
     applyState: (toolState) => {
       applyCheckedState('#password-lowercase', toolState.lowercase);
       applyCheckedState('#password-uppercase', toolState.uppercase);
       applyCheckedState('#password-numbers', toolState.numbers);
       applyCheckedState('#password-symbols', toolState.symbols);
+      applyCheckedState('#password-ambiguous', toolState.ambiguous);
       applyValueState('#password-length', toolState.length);
     },
     watch: (callback) => {
       bindToolWatchers(
-        ['#password-length', '#password-lowercase', '#password-uppercase', '#password-numbers', '#password-symbols'],
+        ['#password-length', '#password-lowercase', '#password-uppercase', '#password-numbers', '#password-symbols', '#password-ambiguous'],
         callback,
       );
     },
@@ -74,11 +83,37 @@ const TOOL_STATE_ADAPTERS = {
         toolState.uppercase && 'ABC',
         toolState.numbers && '123',
         toolState.symbols && '#$!',
+        toolState.ambiguous && 'clear',
       ]
         .filter(Boolean)
         .join(' ');
       return `${toolState.length || 18} chars${enabled ? ` · ${enabled}` : ''}`;
     },
+  },
+  hash: {
+    params: {
+      source: 'hash_source',
+      algorithm: 'hash_alg',
+      text: 'hash_text',
+    },
+    autoSyncParams: {
+      source: 'hash_source',
+      algorithm: 'hash_alg',
+    },
+    getState: () => ({
+      source: $('#hash-source')?.value || 'text',
+      algorithm: $('#hash-algorithm')?.value || 'sha256',
+      text: $('#hash-input')?.value || '',
+    }),
+    applyState: (toolState) => {
+      applyValueState('#hash-source', toolState.source);
+      applyValueState('#hash-algorithm', toolState.algorithm);
+      applyValueState('#hash-input', toolState.text);
+    },
+    watch: (callback) => {
+      bindToolWatchers(['#hash-source', '#hash-algorithm', '#hash-input'], callback);
+    },
+    summarize: (toolState) => `${toolState.algorithm || 'sha256'} · ${toolState.source || 'text'}${toolState.source === 'text' ? ` · ${summarizeText(toolState.text, 24)}` : ''}`,
   },
   case: {
     params: {
@@ -119,21 +154,81 @@ const TOOL_STATE_ADAPTERS = {
     },
     summarize: (toolState) => summarizeText(toolState.text, 36),
   },
+  json: {
+    params: {
+      text: 'json_text',
+      mode: 'json_mode',
+      indent: 'json_indent',
+      sortKeys: 'json_sort',
+    },
+    autoSyncParams: {
+      mode: 'json_mode',
+      indent: 'json_indent',
+      sortKeys: 'json_sort',
+    },
+    getState: () => ({
+      text: $('#json-input')?.value || '',
+      mode: $('#json-mode')?.value || 'pretty',
+      indent: Number($('#json-indent')?.value || 2),
+      sortKeys: $('#json-sort-keys')?.checked ?? false,
+    }),
+    applyState: (toolState) => {
+      applyValueState('#json-input', toolState.text);
+      applyValueState('#json-mode', toolState.mode);
+      applyValueState('#json-indent', toolState.indent);
+      applyCheckedState('#json-sort-keys', toolState.sortKeys);
+    },
+    watch: (callback) => {
+      bindToolWatchers(['#json-input', '#json-mode', '#json-indent', '#json-sort-keys'], callback);
+    },
+    summarize: (toolState) => `${toolState.mode || 'pretty'}${toolState.sortKeys ? ' · sorted' : ''} · ${summarizeText(toolState.text, 30)}`,
+  },
+  encode: {
+    params: {
+      text: 'enc_text',
+      mode: 'enc_mode',
+      direction: 'enc_dir',
+    },
+    autoSyncParams: {
+      mode: 'enc_mode',
+      direction: 'enc_dir',
+    },
+    getState: () => ({
+      text: $('#encode-input')?.value || '',
+      mode: $('#encode-mode')?.value || 'base64',
+      direction: $('#encode-direction')?.value || 'encode',
+    }),
+    applyState: (toolState) => {
+      applyValueState('#encode-input', toolState.text);
+      applyValueState('#encode-mode', toolState.mode);
+      applyValueState('#encode-direction', toolState.direction);
+    },
+    watch: (callback) => {
+      bindToolWatchers(['#encode-input', '#encode-mode', '#encode-direction'], callback);
+    },
+    summarize: (toolState) => `${toolState.direction || 'encode'} ${toolState.mode || 'base64'} · ${summarizeText(toolState.text, 28)}`,
+  },
   qr: {
     params: {
       text: 'qr_text',
+      size: 'qr_size',
+      quietZone: 'qr_qz',
     },
     autoSyncParams: {},
     getState: () => ({
       text: $('#qr-input')?.value || '',
+      size: Number($('#qr-size')?.value || 768),
+      quietZone: Number($('#qr-quiet-zone')?.value || 4),
     }),
     applyState: (toolState) => {
       applyValueState('#qr-input', toolState.text);
+      applyValueState('#qr-size', toolState.size);
+      applyValueState('#qr-quiet-zone', toolState.quietZone);
     },
     watch: (callback) => {
-      bindToolWatchers(['#qr-input'], callback);
+      bindToolWatchers(['#qr-input', '#qr-size', '#qr-quiet-zone'], callback);
     },
-    summarize: (toolState) => summarizeText(toolState.text, 40),
+    summarize: (toolState) => `${summarizeText(toolState.text, 28)} · ${toolState.size || 768}px`,
   },
   timezone: {
     params: {
@@ -158,6 +253,35 @@ const TOOL_STATE_ADAPTERS = {
       const time = toolState.value ? toolState.value.replace('T', ' ') : 'Current time';
       return `${time} · ${toolState.from || 'UTC'} to ${toolState.to || 'UTC'}`;
     },
+  },
+  datetime: {
+    params: {
+      source: 'dt_value',
+      assume: 'dt_assume',
+      start: 'dt_start',
+      end: 'dt_end',
+    },
+    autoSyncParams: {
+      assume: 'dt_assume',
+      start: 'dt_start',
+      end: 'dt_end',
+    },
+    getState: () => ({
+      source: $('#datetime-source')?.value || '',
+      assume: $('#datetime-assume-timezone')?.value || 'local',
+      start: $('#datetime-start')?.value || '',
+      end: $('#datetime-end')?.value || '',
+    }),
+    applyState: (toolState) => {
+      applyValueState('#datetime-source', toolState.source);
+      applyValueState('#datetime-assume-timezone', toolState.assume);
+      applyValueState('#datetime-start', toolState.start);
+      applyValueState('#datetime-end', toolState.end);
+    },
+    watch: (callback) => {
+      bindToolWatchers(['#datetime-source', '#datetime-assume-timezone', '#datetime-start', '#datetime-end'], callback);
+    },
+    summarize: (toolState) => `${summarizeText(toolState.source, 24)} · ${toolState.start || 'start'} to ${toolState.end || 'end'}`,
   },
   timer: {
     params: {
@@ -207,29 +331,60 @@ const TOOL_STATE_ADAPTERS = {
       min: 'rand_min',
       max: 'rand_max',
       count: 'rand_count',
+      decimals: 'rand_dec',
       unique: 'rand_unique',
+      sort: 'rand_sort',
     },
     getState: () => ({
       min: Number($('#random-min')?.value || 1),
       max: Number($('#random-max')?.value || 100),
       count: Number($('#random-count')?.value || 1),
+      decimals: Number($('#random-decimals')?.value || 0),
       unique: $('#random-unique')?.checked ?? false,
+      sort: $('#random-sort')?.value || 'none',
     }),
     applyState: (toolState) => {
       applyValueState('#random-min', toolState.min);
       applyValueState('#random-max', toolState.max);
       applyValueState('#random-count', toolState.count);
+      applyValueState('#random-decimals', toolState.decimals);
       applyCheckedState('#random-unique', toolState.unique);
+      applyValueState('#random-sort', toolState.sort);
       $('#random-generate')?.click();
     },
     watch: (callback) => {
-      bindToolWatchers(['#random-min', '#random-max', '#random-count', '#random-unique'], callback);
+      bindToolWatchers(['#random-min', '#random-max', '#random-count', '#random-decimals', '#random-unique', '#random-sort'], callback);
     },
     summarize: (toolState) => {
       const quantity = toolState.count > 1 ? `${toolState.count} values` : '1 value';
       const unique = toolState.unique ? ' · unique' : '';
-      return `${quantity}${unique} · ${toolState.min} to ${toolState.max}`;
+      const decimals = toolState.decimals ? ` · ${toolState.decimals}dp` : '';
+      return `${quantity}${unique}${decimals} · ${toolState.min} to ${toolState.max}`;
     },
+  },
+  uuid: {
+    params: {
+      count: 'uuid_count',
+      case: 'uuid_case',
+      separator: 'uuid_sep',
+      braces: 'uuid_braces',
+    },
+    getState: () => ({
+      count: Number($('#uuid-count')?.value || 1),
+      case: $('#uuid-case')?.value || 'lower',
+      separator: $('#uuid-separator')?.value || 'lines',
+      braces: $('#uuid-braces')?.checked ?? false,
+    }),
+    applyState: (toolState) => {
+      applyValueState('#uuid-count', toolState.count);
+      applyValueState('#uuid-case', toolState.case);
+      applyValueState('#uuid-separator', toolState.separator);
+      applyCheckedState('#uuid-braces', toolState.braces);
+    },
+    watch: (callback) => {
+      bindToolWatchers(['#uuid-count', '#uuid-case', '#uuid-separator', '#uuid-braces'], callback);
+    },
+    summarize: (toolState) => `${toolState.count || 1} UUIDs · ${toolState.case || 'lower'}${toolState.braces ? ' · braced' : ''}`,
   },
   converter: {
     params: {
@@ -279,28 +434,31 @@ function initTheme() {
 
 function renderToolTabs() {
   const tabs = $('#top-tool-tabs');
-  if (!tabs) return;
   const tabTools = getVisibleNavTools();
 
-  tabs.innerHTML = tabTools.map(
-    (tool) => `
-      <button
-        class="tab-button"
-        type="button"
-        role="tab"
-        id="tab-${tool.id}"
-        aria-controls="${tool.id}"
-        aria-selected="${tool.id === state.activeTool}"
-        tabindex="${tool.id === state.activeTool ? '0' : '-1'}"
-        data-tool-tab="${tool.id}"
-        data-favorite="${state.favorites.has(tool.id)}"
-      >
-        ${NAV_LABELS[tool.id] || tool.title}
-      </button>
-    `,
-  ).join('');
+  if (tabs) {
+    tabs.innerHTML = tabTools.map(
+      (tool) => `
+        <button
+          class="tab-button"
+          type="button"
+          role="tab"
+          id="tab-${tool.id}"
+          aria-controls="${tool.id}"
+          aria-selected="${tool.id === state.activeTool}"
+          tabindex="${tool.id === state.activeTool ? '0' : '-1'}"
+          data-tool-tab="${tool.id}"
+          data-favorite="${state.favorites.has(tool.id)}"
+        >
+          ${NAV_LABELS[tool.id] || tool.title}
+        </button>
+      `,
+    ).join('');
+  }
 
-  if (!tabs.dataset.bound) {
+  renderToolDrawer();
+
+  if (tabs && !tabs.dataset.bound) {
     tabs.addEventListener('click', (event) => {
       const button = event.target.closest('[data-tool-tab]');
       if (!button) return;
@@ -330,6 +488,38 @@ function renderToolTabs() {
     });
     tabs.dataset.bound = 'true';
   }
+}
+
+function renderToolDrawer() {
+  const groups = $('#tool-drawer-groups');
+  if (!groups) return;
+
+  const groupedTools = getVisibleNavTools().reduce((accumulator, tool) => {
+    if (!accumulator.has(tool.category)) {
+      accumulator.set(tool.category, []);
+    }
+    accumulator.get(tool.category).push(tool);
+    return accumulator;
+  }, new Map());
+
+  groups.innerHTML = [...groupedTools.entries()]
+    .map(([category, tools]) => `
+      <section class="tool-drawer-group" aria-label="${escapeHtml(category)} tools">
+        <div class="tool-drawer-group-head">
+          <h3>${escapeHtml(category)}</h3>
+          <span>${tools.length}</span>
+        </div>
+        <div class="tool-drawer-list">
+          ${tools.map((tool) => `
+            <button class="tool-drawer-link" type="button" data-drawer-tool="${tool.id}" aria-current="${tool.id === state.activeTool ? 'true' : 'false'}">
+              <strong>${escapeHtml(NAV_LABELS[tool.id] || tool.title)}</strong>
+              <span>${escapeHtml(tool.summary)}</span>
+            </button>
+          `).join('')}
+        </div>
+      </section>
+    `)
+    .join('');
 }
 
 function getVisibleNavTools() {
@@ -365,6 +555,7 @@ function activateTool(toolId, options = {}) {
   renderQuickCollections();
   renderPanelEnhancements();
   renderSearchResults($('#tool-search')?.value || '');
+  closeToolDrawer();
 
   if (scroll) {
     $('#workbench')?.scrollIntoView({ block: 'start', behavior: 'smooth' });
@@ -578,7 +769,8 @@ function renderPanelEnhancements() {
 
     const existingWorkspace = $(`[data-panel-workspace="${toolId}"]`, panel);
     const workspace = existingWorkspace || document.createElement('details');
-    const wasOpen = existingWorkspace?.open ?? false;
+    const defaultOpen = window.matchMedia('(min-width: 641px)').matches;
+    const wasOpen = existingWorkspace?.open ?? defaultOpen;
 
     workspace.className = 'panel-workspace';
     workspace.dataset.panelWorkspace = toolId;
@@ -595,7 +787,7 @@ function buildPanelWorkspaceMarkup(toolId) {
   const presets = state.presets[toolId] || [];
   const history = state.history[toolId] || [];
   const summary = PRESET_TOOL_IDS.has(toolId)
-    ? `${presets.length} preset${presets.length === 1 ? '' : 's'} · ${history.length} recent`
+    ? `${presets.length} preset${presets.length === 1 ? '' : 's'} · ${history.length} saved states`
     : state.favorites.has(toolId)
       ? 'Pinned for quick access'
       : 'Actions and share links';
@@ -614,11 +806,51 @@ function buildPanelWorkspaceMarkup(toolId) {
           : ''}
       </div>
       <p class="workspace-status" id="workspace-status-${toolId}" aria-live="polite"></p>
+      ${buildWorkspaceJumpMarkup(toolId)}
       ${PRESET_TOOL_IDS.has(toolId)
         ? buildToolContextMarkup(toolId)
         : '<p class="context-empty">Pin this tool or copy a share link when you want to return to the same setup later.</p>'}
     </div>
   `;
+}
+
+function buildWorkspaceJumpMarkup(toolId) {
+  const launchTools = getWorkspaceJumpTools(toolId);
+  const meta = `${state.favorites.size} pinned · ${state.recentTools.length} recent`;
+
+  return `
+    <div class="context-group">
+      <div class="context-meta">
+        <span class="context-label">Quick jump</span>
+        <span class="context-count">${escapeHtml(meta)}</span>
+      </div>
+      <div class="context-pill-row">
+        ${launchTools.length
+          ? launchTools
+              .map(
+                (tool) => `
+                  <button class="context-pill" type="button" data-chip-tool="${tool.id}" data-kind="workspace">
+                    ${escapeHtml(NAV_LABELS[tool.id] || tool.title)}
+                  </button>
+                `,
+              )
+              .join('')
+          : '<p class="context-empty">Pin tools or open a few utilities to build a faster jump list here.</p>'}
+      </div>
+    </div>
+  `;
+}
+
+function getWorkspaceJumpTools(toolId) {
+  const ids = [...new Set([...state.favorites, ...state.recentTools])]
+    .filter((entry) => entry !== toolId);
+
+  const defaults = ['password', 'json', 'timezone', 'random', 'converter'];
+
+  return [...new Set([...ids, ...defaults])]
+    .map((entry) => getTool(entry))
+    .filter((tool, index, list) => tool && tool.primary !== false && list.findIndex((item) => item?.id === tool.id) === index)
+    .slice(0, 6);
 }
 
 function buildToolContextMarkup(toolId) {
@@ -679,6 +911,12 @@ function initDelegatedUi() {
       return;
     }
 
+    const drawerButton = target.closest('[data-drawer-tool]');
+    if (drawerButton) {
+      activateTool(drawerButton.dataset.drawerTool, { scroll: true });
+      return;
+    }
+
     const chipButton = target.closest('[data-chip-tool]');
     if (chipButton) {
       activateTool(chipButton.dataset.chipTool, { scroll: true });
@@ -726,6 +964,48 @@ function initDelegatedUi() {
       }
     }
   });
+}
+
+function initToolMenu() {
+  $('[data-tool-menu-toggle]')?.addEventListener('click', () => {
+    if (state.toolDrawerOpen) {
+      closeToolDrawer();
+    } else {
+      openToolDrawer();
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    const target = event.target instanceof HTMLElement ? event.target : null;
+    if (!target?.closest('[data-tool-drawer-close]')) return;
+    closeToolDrawer();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && state.toolDrawerOpen) {
+      closeToolDrawer();
+    }
+  });
+}
+
+function openToolDrawer() {
+  const drawer = $('#tool-drawer');
+  if (!drawer) return;
+
+  drawer.hidden = false;
+  state.toolDrawerOpen = true;
+  document.body.classList.add('tool-drawer-open');
+  $('[data-tool-menu-toggle]')?.setAttribute('aria-expanded', 'true');
+}
+
+function closeToolDrawer() {
+  const drawer = $('#tool-drawer');
+  if (!drawer || !state.toolDrawerOpen) return;
+
+  drawer.hidden = true;
+  state.toolDrawerOpen = false;
+  document.body.classList.remove('tool-drawer-open');
+  $('[data-tool-menu-toggle]')?.setAttribute('aria-expanded', 'false');
 }
 
 function initRouting() {
@@ -1165,6 +1445,7 @@ function init() {
   initTheme();
   renderToolTabs();
   initToolModules();
+  initToolMenu();
   initToolSearch();
   initToolStateSync();
   renderQuickCollections();

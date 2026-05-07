@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aegis | Free Online Utility Toolkit for Passwords, QR Codes, Text, Time, and Unit Conversion</title>
-  <meta name="description" content="Aegis is a free online utility toolkit with a password generator, QR code generator, text tools, timezone conversion, timers, random numbers, and unit conversion in one browser workspace.">
+  <title>Aegis | Free Online Utility Toolkit for Passwords, JSON, QR Codes, Time, and Hashing</title>
+  <meta name="description" content="Aegis is a free online utility toolkit with password generation, JSON formatting, QR codes, encoding, hashing, UUIDs, timestamps, timers, timezones, random numbers, and unit conversion in one browser workspace.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="theme-color" content="#07131b">
   <meta name="application-name" content="Aegis">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Aegis | Free Online Utility Toolkit">
-  <meta property="og:description" content="Use Aegis for password generation, QR codes, text conversion, timers, timezone conversion, random numbers, and unit conversion in one browser-based toolkit.">
+  <meta property="og:description" content="Use Aegis for password generation, JSON formatting, QR codes, encoding, hashing, timestamps, timers, timezones, random numbers, and unit conversion in one browser-based toolkit.">
   <meta property="og:url" content="https://charlemagne404.github.io/Aegis/">
   <meta property="og:site_name" content="Aegis">
   <meta property="og:image" content="https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png">
   <meta property="og:image:alt" content="Aegis utility toolkit icon">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Aegis | Free Online Utility Toolkit">
-  <meta name="twitter:description" content="A free browser toolkit for passwords, QR codes, text tools, timers, timezone conversion, random numbers, and unit conversion.">
+  <meta name="twitter:description" content="A free browser toolkit for passwords, JSON, QR codes, encoding, hashes, timestamps, timers, and conversions.">
   <meta name="twitter:image" content="https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png">
   <link rel="canonical" href="https://charlemagne404.github.io/Aegis/">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
@@ -45,7 +45,7 @@
           "@id": "https://charlemagne404.github.io/Aegis/#website",
           "url": "https://charlemagne404.github.io/Aegis/",
           "name": "Aegis",
-          "description": "Free online utility toolkit for passwords, QR codes, text conversion, timezone conversion, timers, random numbers, and unit conversion.",
+          "description": "Free online utility toolkit for passwords, JSON formatting, QR codes, encoding, hashing, timestamps, random numbers, and unit conversion.",
           "inLanguage": "en",
           "publisher": {
             "@id": "https://charlemagne404.github.io/Aegis/#organization"
@@ -61,16 +61,21 @@
           "browserRequirements": "Requires JavaScript",
           "isAccessibleForFree": true,
           "image": "https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png",
-          "description": "Free browser-based utility toolkit with password generation, QR codes, text tools, timezone conversion, timers, random numbers, and unit conversion.",
+          "description": "Free browser-based utility toolkit with password generation, JSON formatting, QR codes, encoding, hashing, timestamps, random numbers, and unit conversion.",
           "featureList": [
             "Password generator and strength checker",
+            "Hash generator and checksum tool",
             "Text case converter",
             "Character and word counter",
+            "JSON formatter and validator",
+            "Base64 and URL encoder-decoder",
             "QR code generator",
             "Connection speed test",
             "Timezone converter",
+            "Date difference and timestamp converter",
             "Countdown timer and stopwatch",
             "Random number generator",
+            "UUID generator",
             "Unit converter"
           ],
           "offers": {
@@ -130,30 +135,60 @@
 
   <header class="site-header">
     <nav class="site-nav" aria-label="Primary navigation">
-      <a class="brand-link aegis-brand" href="#home" aria-label="Aegis home">
-        <span class="aegis-brand-mark" aria-hidden="true">
-          <img src="assets/aegis-mark.svg" alt="" width="36" height="36">
-        </span>
-        <span class="brand-copy">
-          <strong>Aegis</strong>
-          <small>by Continental</small>
-        </span>
-      </a>
+      <div class="site-nav-main">
+        <a class="brand-link aegis-brand" href="#home" aria-label="Aegis home">
+          <span class="aegis-brand-mark" aria-hidden="true">
+            <img src="assets/aegis-mark.svg" alt="" width="36" height="36">
+          </span>
+          <span class="brand-copy">
+            <strong>Aegis</strong>
+            <small>by Continental</small>
+          </span>
+        </a>
+
+        <label class="tool-search-shell nav-search-shell" for="tool-search">
+          <span class="sr-only">Search tools</span>
+          <input type="search" id="tool-search" placeholder="Search any tool or press /" autocomplete="off" spellcheck="false" aria-describedby="workspace-hint">
+        </label>
+
+        <div class="nav-actions">
+          <button class="tool-menu-toggle" type="button" data-tool-menu-toggle aria-controls="tool-drawer" aria-expanded="false">
+            All tools
+          </button>
+          <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
+            <span data-theme-label>Theme</span>
+          </button>
+        </div>
+      </div>
 
       <div class="top-tool-tabs" id="top-tool-tabs" role="tablist" aria-label="Tools" aria-orientation="horizontal"></div>
-
-      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
-        <span data-theme-label>Theme</span>
-      </button>
+      <div class="tool-search-results nav-search-results" id="tool-search-results" role="list" aria-label="Matching tools"></div>
     </nav>
   </header>
+
+  <div class="tool-drawer" id="tool-drawer" hidden>
+    <button class="tool-drawer-backdrop" type="button" data-tool-drawer-close tabindex="-1" aria-hidden="true"></button>
+    <aside class="tool-drawer-panel" aria-labelledby="tool-drawer-title">
+      <div class="tool-drawer-header">
+        <div>
+          <p class="eyebrow">Browse</p>
+          <h2 id="tool-drawer-title">All tools</h2>
+        </div>
+        <button class="tool-drawer-close" type="button" data-tool-drawer-close aria-label="Close all tools">
+          Close
+        </button>
+      </div>
+      <p class="tool-drawer-copy">Use search or jump straight into a category.</p>
+      <div class="tool-drawer-groups" id="tool-drawer-groups"></div>
+    </aside>
+  </div>
 
   <main id="main-content">
     <section class="intro-section" id="home">
       <div class="hero-copy">
         <p class="eyebrow">Privacy-first utilities</p>
         <h1>Aegis Utility Toolkit</h1>
-        <p class="hero-lede">Free online tools for passwords, QR codes, text conversion, timers, timezones, random numbers, and unit conversion.</p>
+        <p class="hero-lede">Free online tools for passwords, JSON, QR codes, encoding, hashes, UUIDs, timestamps, timers, timezones, random numbers, and unit conversion.</p>
         <p class="hero-support">Runs in your browser. Device-local workspace preferences stay on this device unless you explicitly copy a share link.</p>
       </div>
     </section>
@@ -196,6 +231,10 @@
                   <input type="checkbox" id="password-symbols" checked>
                   <span>Symbols</span>
                 </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="password-ambiguous">
+                  <span>Exclude ambiguous</span>
+                </label>
               </div>
             </section>
 
@@ -208,9 +247,100 @@
               <div class="strength-meter" aria-label="Password strength">
                 <span id="password-strength-bar"></span>
               </div>
+              <div class="detail-grid compact-detail-grid" aria-live="polite">
+                <div class="detail-card">
+                  <span>Entropy</span>
+                  <strong id="password-entropy">0 bits</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Character pool</span>
+                  <strong id="password-charset-size">0</strong>
+                </div>
+              </div>
               <div class="button-row">
                 <button class="button button-secondary" type="button" id="password-copy">Copy</button>
                 <span class="inline-status" id="password-status"></span>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="hash" data-tool-panel="hash" role="tabpanel" tabindex="-1" aria-labelledby="tab-hash" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Security</p>
+              <h3 id="hash-title">Hash generator and checksum tool</h3>
+            </div>
+            <div class="button-row">
+              <button class="button button-secondary" type="button" id="hash-copy">Copy checksum</button>
+              <button class="button button-secondary" type="button" id="hash-download">Download</button>
+            </div>
+          </div>
+
+          <div class="password-layout">
+            <section class="tool-subpanel" aria-labelledby="hash-source-title">
+              <div class="subpanel-heading">
+                <h4 id="hash-source-title">Source</h4>
+                <span id="hash-status">Ready</span>
+              </div>
+              <div class="form-grid">
+                <label>
+                  <span>Hash text or file</span>
+                  <select id="hash-source">
+                    <option value="text" selected>Text</option>
+                    <option value="file">Local file</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Algorithm</span>
+                  <select id="hash-algorithm">
+                    <option value="md5">MD5</option>
+                    <option value="sha1">SHA-1</option>
+                    <option value="sha256" selected>SHA-256</option>
+                    <option value="sha384">SHA-384</option>
+                    <option value="sha512">SHA-512</option>
+                  </select>
+                </label>
+              </div>
+              <div id="hash-text-panel">
+                <label>
+                  <span>Text</span>
+                  <textarea id="hash-input" class="mono-field" rows="8" placeholder="Type text to hash.">Aegis utility toolkit</textarea>
+                </label>
+              </div>
+              <div id="hash-file-panel" hidden>
+                <label>
+                  <span>Local file</span>
+                  <input type="file" id="hash-file">
+                </label>
+                <p class="inline-status" id="hash-file-meta">No file selected yet.</p>
+              </div>
+            </section>
+
+            <section class="tool-subpanel" aria-labelledby="hash-output-title">
+              <div class="subpanel-heading">
+                <h4 id="hash-output-title">Checksum</h4>
+                <span id="hash-action-status"></span>
+              </div>
+              <div class="result-card random-result hash-result" id="hash-output" aria-live="polite">Select text or a local file to generate a checksum.</div>
+              <p class="inline-status" id="hash-detail">Enter text to calculate a checksum without sending it anywhere.</p>
+              <div class="detail-grid compact-detail-grid" aria-live="polite">
+                <div class="detail-card">
+                  <span>Source</span>
+                  <strong id="hash-source-label">Text</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Algorithm</span>
+                  <strong id="hash-algorithm-label">SHA-256</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Input size</span>
+                  <strong id="hash-size">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Digest size</span>
+                  <strong id="hash-digest-size">--</strong>
+                </div>
               </div>
             </section>
           </div>
@@ -237,11 +367,18 @@
               <div class="mode-row" role="group" aria-label="Case conversion mode">
                 <button class="mode-button" type="button" data-case-mode="lower" aria-pressed="true">lowercase</button>
                 <button class="mode-button" type="button" data-case-mode="upper" aria-pressed="false">UPPERCASE</button>
+                <button class="mode-button" type="button" data-case-mode="sentence" aria-pressed="false">Sentence case</button>
                 <button class="mode-button" type="button" data-case-mode="title" aria-pressed="false">Title Case</button>
                 <button class="mode-button" type="button" data-case-mode="camel" aria-pressed="false">camelCase</button>
                 <button class="mode-button" type="button" data-case-mode="snake" aria-pressed="false">snake_case</button>
+                <button class="mode-button" type="button" data-case-mode="kebab" aria-pressed="false">kebab-case</button>
+                <button class="mode-button" type="button" data-case-mode="constant" aria-pressed="false">CONSTANT_CASE</button>
               </div>
               <div class="result-card text-preview" id="case-output" aria-live="polite"></div>
+              <div class="button-row">
+                <button class="button button-secondary" type="button" id="case-copy">Copy output</button>
+                <span class="inline-status" id="case-status"></span>
+              </div>
             </section>
           </div>
         </article>
@@ -265,6 +402,10 @@
                 <strong id="counter-characters">0</strong>
               </div>
               <div class="counter-card">
+                <span>No spaces</span>
+                <strong id="counter-characters-no-spaces">0</strong>
+              </div>
+              <div class="counter-card">
                 <span>Words</span>
                 <strong id="counter-words">0</strong>
               </div>
@@ -272,7 +413,171 @@
                 <span>Sentences</span>
                 <strong id="counter-sentences">0</strong>
               </div>
+              <div class="counter-card">
+                <span>Paragraphs</span>
+                <strong id="counter-paragraphs">0</strong>
+              </div>
+              <div class="counter-card">
+                <span>Reading time</span>
+                <strong id="counter-reading-time">0 min</strong>
+              </div>
             </div>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="json" data-tool-panel="json" role="tabpanel" tabindex="-1" aria-labelledby="tab-json" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Data</p>
+              <h3 id="json-title">JSON formatter and validator</h3>
+            </div>
+            <div class="button-row">
+              <button class="button button-secondary" type="button" id="json-copy">Copy output</button>
+              <button class="button button-secondary" type="button" id="json-download">Download JSON</button>
+            </div>
+          </div>
+
+          <div class="text-tool-layout">
+            <section class="tool-subpanel" aria-labelledby="json-input-title">
+              <div class="subpanel-heading">
+                <h4 id="json-input-title">Input</h4>
+                <span>Local processing</span>
+              </div>
+              <label>
+                <span>JSON</span>
+                <textarea id="json-input" class="mono-field" rows="11" placeholder='{"name":"Aegis","tools":["json","hash"]}'>{"name":"Aegis","tools":["json","hash","uuid"],"privacy":{"mode":"local-first","shareLinks":true}}</textarea>
+              </label>
+              <div class="form-grid">
+                <label>
+                  <span>Output mode</span>
+                  <select id="json-mode">
+                    <option value="pretty" selected>Pretty print</option>
+                    <option value="minify">Minified</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Indentation</span>
+                  <select id="json-indent">
+                    <option value="2" selected>2 spaces</option>
+                    <option value="4">4 spaces</option>
+                    <option value="8">8 spaces</option>
+                  </select>
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="json-sort-keys">
+                  <span>Sort keys recursively</span>
+                </label>
+              </div>
+            </section>
+
+            <section class="tool-subpanel" aria-labelledby="json-output-title">
+              <div class="subpanel-heading">
+                <h4 id="json-output-title">Output</h4>
+                <span id="json-status">Ready</span>
+              </div>
+              <label>
+                <span>Formatted JSON</span>
+                <textarea id="json-output" class="mono-field output-field" rows="11" readonly spellcheck="false"></textarea>
+              </label>
+              <p class="inline-status" id="json-detail">Paste JSON to validate, format, minify, and export it locally.</p>
+              <div class="detail-grid compact-detail-grid" aria-live="polite">
+                <div class="detail-card">
+                  <span>Root type</span>
+                  <strong id="json-type">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Lines</span>
+                  <strong id="json-lines">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Bytes</span>
+                  <strong id="json-bytes">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Depth</span>
+                  <strong id="json-depth">--</strong>
+                </div>
+              </div>
+              <div class="button-row">
+                <span class="inline-status" id="json-action-status"></span>
+              </div>
+            </section>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="encode" data-tool-panel="encode" role="tabpanel" tabindex="-1" aria-labelledby="tab-encode" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Encoding</p>
+              <h3 id="encode-title">Base64 and URL encoder-decoder</h3>
+            </div>
+            <div class="button-row">
+              <button class="button button-secondary" type="button" id="encode-copy">Copy output</button>
+              <button class="button button-secondary" type="button" id="encode-swap">Use output as input</button>
+            </div>
+          </div>
+
+          <div class="text-tool-layout">
+            <section class="tool-subpanel" aria-labelledby="encode-input-title">
+              <div class="subpanel-heading">
+                <h4 id="encode-input-title">Input</h4>
+                <span>UTF-8 aware</span>
+              </div>
+              <label>
+                <span>Text</span>
+                <textarea id="encode-input" class="mono-field" rows="11" placeholder="Type text to encode or decode.">https://continental.studio/?tool=json</textarea>
+              </label>
+              <div class="form-grid">
+                <label>
+                  <span>Encoding</span>
+                  <select id="encode-mode">
+                    <option value="base64" selected>Base64</option>
+                    <option value="base64url">URL-safe Base64</option>
+                    <option value="url">URL percent-encoding</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Direction</span>
+                  <select id="encode-direction">
+                    <option value="encode" selected>Encode</option>
+                    <option value="decode">Decode</option>
+                  </select>
+                </label>
+              </div>
+            </section>
+
+            <section class="tool-subpanel" aria-labelledby="encode-output-title">
+              <div class="subpanel-heading">
+                <h4 id="encode-output-title">Output</h4>
+                <span id="encode-status">Ready</span>
+              </div>
+              <label>
+                <span>Converted text</span>
+                <textarea id="encode-output" class="mono-field output-field" rows="11" readonly spellcheck="false"></textarea>
+              </label>
+              <p class="inline-status" id="encode-detail">Convert UTF-8 text with Base64, URL-safe Base64, or percent-encoding.</p>
+              <div class="detail-grid compact-detail-grid" aria-live="polite">
+                <div class="detail-card">
+                  <span>Input bytes</span>
+                  <strong id="encode-input-bytes">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Output bytes</span>
+                  <strong id="encode-output-bytes">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Format</span>
+                  <strong id="encode-format">Base64</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Direction</span>
+                  <strong id="encode-direction-label">Encode</strong>
+                </div>
+              </div>
+              <div class="button-row">
+                <span class="inline-status" id="encode-action-status"></span>
+              </div>
+            </section>
           </div>
         </article>
 
@@ -282,14 +587,34 @@
               <p class="eyebrow">Share</p>
               <h3 id="qr-title">QR code generator</h3>
             </div>
-            <button class="button button-secondary" type="button" id="qr-download">Download PNG</button>
+            <div class="button-row">
+              <button class="button button-secondary" type="button" id="qr-copy-source">Copy text</button>
+              <button class="button button-secondary" type="button" id="qr-download-svg">Download SVG</button>
+              <button class="button button-primary" type="button" id="qr-download">Download PNG</button>
+            </div>
           </div>
 
           <div class="qr-layout">
-            <label>
-              <span>Text or URL</span>
-              <textarea id="qr-input" rows="8" placeholder="Enter text or a URL.">https://continental.studio</textarea>
-            </label>
+            <div class="tool-subpanel">
+              <label>
+                <span>Text or URL</span>
+                <textarea id="qr-input" rows="8" placeholder="Enter text or a URL.">https://continental.studio</textarea>
+              </label>
+              <div class="form-grid qr-options-grid">
+                <label>
+                  <span>Export size</span>
+                  <select id="qr-size">
+                    <option value="384">384 px</option>
+                    <option value="768" selected>768 px</option>
+                    <option value="1024">1024 px</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Quiet zone</span>
+                  <input type="number" id="qr-quiet-zone" min="0" max="12" value="4">
+                </label>
+              </div>
+            </div>
             <section class="tool-subpanel qr-preview-panel" aria-labelledby="qr-preview-title">
               <div class="subpanel-heading">
                 <h4 id="qr-preview-title">QR code</h4>
@@ -310,6 +635,7 @@
               <p class="panel-note">Runs from your browser against the server endpoints defined in <code>speed-test-config.json</code>. Results are approximate and should be treated as directional, not lab-grade measurements.</p>
             </div>
             <div class="button-row speed-actions">
+              <button class="button button-secondary" type="button" id="speed-reload">Reload config</button>
               <button class="button button-primary" type="button" id="speed-start">Start test</button>
               <button class="button button-secondary" type="button" id="speed-reset">Reset</button>
             </div>
@@ -341,8 +667,23 @@
                 <span>Upload</span>
                 <strong><span id="speed-upload">--</span> Mbps</strong>
               </div>
+              <div class="result-card speed-summary-card">
+                <span id="speed-grade-label">Network summary</span>
+                <strong id="speed-grade">Waiting</strong>
+                <small id="speed-summary">Run a test to classify the current connection and keep a short local history.</small>
+              </div>
             </div>
           </div>
+
+          <section class="tool-subpanel speed-history-panel" aria-labelledby="speed-history-title">
+            <div class="subpanel-heading">
+              <h4 id="speed-history-title">Recent runs</h4>
+              <span>Stored on this device</span>
+            </div>
+            <div class="stack-list" id="speed-history" aria-live="polite">
+              <p class="context-empty">No speed tests yet.</p>
+            </div>
+          </section>
 
           <section class="tool-subpanel speed-setup" aria-labelledby="speed-setup-title">
             <div class="subpanel-heading">
@@ -364,6 +705,11 @@
               <p class="eyebrow">Time</p>
               <h3 id="timezone-title">Timezones</h3>
             </div>
+            <div class="button-row">
+              <button class="button button-secondary" type="button" id="timezone-now">Use now</button>
+              <button class="button button-secondary" type="button" id="timezone-swap">Swap</button>
+              <button class="button button-secondary" type="button" id="timezone-copy">Copy result</button>
+            </div>
           </div>
 
           <div class="form-grid timezone-grid">
@@ -382,7 +728,114 @@
           </div>
 
           <div class="result-card" id="timezone-result" aria-live="polite"></div>
+          <div class="detail-grid timezone-detail-grid" aria-live="polite">
+            <div class="detail-card">
+              <span>Offset difference</span>
+              <strong id="timezone-difference">--</strong>
+            </div>
+            <div class="detail-card">
+              <span>Day shift</span>
+              <strong id="timezone-day-shift">Same day</strong>
+            </div>
+          </div>
           <div class="clock-grid" id="timezone-clocks"></div>
+        </article>
+
+        <article class="tool-panel" id="datetime" data-tool-panel="datetime" role="tabpanel" tabindex="-1" aria-labelledby="tab-datetime" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Time</p>
+              <h3 id="datetime-title">Date difference and timestamp converter</h3>
+            </div>
+            <div class="button-row">
+              <button class="button button-secondary" type="button" id="datetime-now">Use now</button>
+              <button class="button button-secondary" type="button" id="datetime-swap">Swap dates</button>
+              <button class="button button-secondary" type="button" id="datetime-copy">Copy summary</button>
+              <span class="inline-status" id="datetime-action-status"></span>
+            </div>
+          </div>
+
+          <div class="timer-layout">
+            <section class="tool-subpanel" aria-labelledby="datetime-converter-title">
+              <div class="subpanel-heading">
+                <h4 id="datetime-converter-title">Timestamp converter</h4>
+                <span id="datetime-status">Awaiting input</span>
+              </div>
+              <label>
+                <span>Date, ISO string, or Unix timestamp</span>
+                <input type="text" id="datetime-source" class="mono-field" placeholder="2026-05-07 14:30 or 1746628200" spellcheck="false">
+              </label>
+              <label>
+                <span>Assume timezone for plain dates</span>
+                <select id="datetime-assume-timezone">
+                  <option value="local" selected>Local time</option>
+                  <option value="utc">UTC</option>
+                </select>
+              </label>
+              <div class="result-card converter-result">
+                <strong id="datetime-relative">Enter a date or timestamp</strong>
+                <small id="datetime-parse-note">Examples: 2026-05-07 14:30, 2026-05-07T14:30:00Z, or 1746628200</small>
+              </div>
+              <div class="detail-grid compact-detail-grid" aria-live="polite">
+                <div class="detail-card">
+                  <span>Local time</span>
+                  <strong id="datetime-local">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>UTC / ISO</span>
+                  <strong id="datetime-utc">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Unix seconds</span>
+                  <strong id="datetime-unix-seconds">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Unix ms</span>
+                  <strong id="datetime-unix-ms">--</strong>
+                </div>
+              </div>
+            </section>
+
+            <section class="tool-subpanel" aria-labelledby="datetime-range-title">
+              <div class="subpanel-heading">
+                <h4 id="datetime-range-title">Date difference</h4>
+                <span id="datetime-range-status">Awaiting range</span>
+              </div>
+              <div class="form-grid datetime-range-grid">
+                <label>
+                  <span>Start</span>
+                  <input type="datetime-local" id="datetime-start">
+                </label>
+                <label>
+                  <span>End</span>
+                  <input type="datetime-local" id="datetime-end">
+                </label>
+              </div>
+              <div class="result-card converter-result" id="datetime-range-result">
+                <strong>Select two date-times</strong>
+                <small>Compare exact elapsed time between any two moments.</small>
+              </div>
+              <p class="inline-status" id="datetime-range-note">Range calculations use the local values entered here.</p>
+              <div class="detail-grid compact-detail-grid" aria-live="polite">
+                <div class="detail-card">
+                  <span>Days</span>
+                  <strong id="datetime-range-days">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Hours</span>
+                  <strong id="datetime-range-hours">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Minutes</span>
+                  <strong id="datetime-range-minutes">--</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Seconds</span>
+                  <strong id="datetime-range-seconds">--</strong>
+                </div>
+              </div>
+            </section>
+          </div>
         </article>
 
         <article class="tool-panel" id="timer" data-tool-panel="timer" role="tabpanel" tabindex="-1" aria-labelledby="tab-timer" hidden>
@@ -413,6 +866,13 @@
                   <span>Seconds</span>
                   <input type="number" id="timer-seconds" min="0" max="59" value="0">
                 </label>
+              </div>
+              <div class="chip-list preset-strip" role="group" aria-label="Quick duration presets">
+                <button class="chip-button" type="button" data-timer-preset="60">1 min</button>
+                <button class="chip-button" type="button" data-timer-preset="300">5 min</button>
+                <button class="chip-button" type="button" data-timer-preset="900">15 min</button>
+                <button class="chip-button" type="button" data-timer-preset="1500">25 min</button>
+                <button class="chip-button" type="button" id="timer-add-minute">+1 min</button>
               </div>
               <div class="alert-options" aria-label="Timer alerts">
                 <label class="checkbox-field">
@@ -474,16 +934,123 @@
               <span>Quantity</span>
               <input type="number" id="random-count" min="1" max="100" value="1">
             </label>
+            <label>
+              <span>Decimals</span>
+              <input type="number" id="random-decimals" min="0" max="6" value="0">
+            </label>
             <label class="checkbox-field">
               <input type="checkbox" id="random-unique">
               <span>Unique values</span>
             </label>
+            <label>
+              <span>Sort</span>
+              <select id="random-sort">
+                <option value="none" selected>As generated</option>
+                <option value="asc">Low to high</option>
+                <option value="desc">High to low</option>
+              </select>
+            </label>
           </div>
 
           <div class="result-card random-result" id="random-result" aria-live="polite">42</div>
+          <div class="detail-grid compact-detail-grid" aria-live="polite">
+            <div class="detail-card">
+              <span>Smallest</span>
+              <strong id="random-min-result">42</strong>
+            </div>
+            <div class="detail-card">
+              <span>Largest</span>
+              <strong id="random-max-result">42</strong>
+            </div>
+            <div class="detail-card">
+              <span>Average</span>
+              <strong id="random-average-result">42</strong>
+            </div>
+            <div class="detail-card">
+              <span>Sum</span>
+              <strong id="random-sum-result">42</strong>
+            </div>
+          </div>
           <div class="button-row">
             <button class="button button-secondary" type="button" id="random-copy">Copy result</button>
             <span class="inline-status" id="random-status"></span>
+          </div>
+        </article>
+
+        <article class="tool-panel" id="uuid" data-tool-panel="uuid" role="tabpanel" tabindex="-1" aria-labelledby="tab-uuid" hidden>
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow">Developer</p>
+              <h3 id="uuid-title">UUID generator</h3>
+            </div>
+            <button class="button button-primary" type="button" id="uuid-generate">Generate</button>
+          </div>
+
+          <div class="text-tool-layout">
+            <section class="tool-subpanel" aria-labelledby="uuid-options-title">
+              <div class="subpanel-heading">
+                <h4 id="uuid-options-title">Options</h4>
+                <span id="uuid-status">Ready</span>
+              </div>
+              <div class="form-grid random-grid">
+                <label>
+                  <span>Quantity</span>
+                  <input type="number" id="uuid-count" min="1" max="100" value="5">
+                </label>
+                <label>
+                  <span>Letter case</span>
+                  <select id="uuid-case">
+                    <option value="lower" selected>Lowercase</option>
+                    <option value="upper">Uppercase</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Separator</span>
+                  <select id="uuid-separator">
+                    <option value="lines" selected>One per line</option>
+                    <option value="comma">Comma separated</option>
+                  </select>
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="uuid-braces">
+                  <span>Wrap in braces</span>
+                </label>
+              </div>
+              <p class="inline-status">Generates RFC 4122 version 4 UUIDs with browser crypto.</p>
+            </section>
+
+            <section class="tool-subpanel" aria-labelledby="uuid-output-title">
+              <div class="subpanel-heading">
+                <h4 id="uuid-output-title">Output</h4>
+                <span id="uuid-action-status"></span>
+              </div>
+              <label>
+                <span>UUIDs</span>
+                <textarea id="uuid-output" class="mono-field output-field" rows="10" readonly spellcheck="false"></textarea>
+              </label>
+              <div class="detail-grid compact-detail-grid" aria-live="polite">
+                <div class="detail-card">
+                  <span>Generated</span>
+                  <strong id="uuid-generated-count">0</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Unique</span>
+                  <strong id="uuid-unique-count">0</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Format</span>
+                  <strong id="uuid-format">Lowercase</strong>
+                </div>
+                <div class="detail-card">
+                  <span>Characters</span>
+                  <strong id="uuid-characters">0</strong>
+                </div>
+              </div>
+              <div class="button-row">
+                <button class="button button-secondary" type="button" id="uuid-copy">Copy output</button>
+                <button class="button button-secondary" type="button" id="uuid-download">Download</button>
+              </div>
+            </section>
           </div>
         </article>
 
@@ -493,6 +1060,7 @@
               <p class="eyebrow">Measure</p>
               <h3 id="converter-title">Unit converter</h3>
             </div>
+            <button class="button button-secondary" type="button" id="unit-swap">Swap units</button>
           </div>
 
           <div class="form-grid converter-grid">
@@ -515,6 +1083,7 @@
           </div>
 
           <div class="result-card converter-result" id="unit-result" aria-live="polite"></div>
+          <p class="inline-status" id="unit-formula">Conversions are calculated locally in your browser.</p>
         </article>
       </div>
     </section>
@@ -522,16 +1091,11 @@
     <section class="workspace-section" id="workspace" aria-labelledby="workspace-title">
       <div class="section-heading compact">
         <p class="eyebrow">Workspace</p>
-        <h2 id="workspace-title">Search, favorites, and saved setups</h2>
-        <p>Press <code>/</code> or <code>Ctrl/Cmd + K</code> to jump between tools. Search suggestions stay collapsed until you start looking.</p>
+        <h2 id="workspace-title">Pinned tools and recent work</h2>
+        <p>Search now lives in the header so you can jump between tools from anywhere. Favorites and recent tools stay on this device.</p>
       </div>
       <aside class="workspace-hub" aria-label="Workspace shortcuts">
-        <label class="tool-search-shell" for="tool-search">
-          <span class="sr-only">Search tools</span>
-          <input type="search" id="tool-search" placeholder="Search tools or press /" autocomplete="off" spellcheck="false" aria-describedby="workspace-hint">
-        </label>
-        <p class="workspace-hint" id="workspace-hint">Pinned tools, saved presets, and explicit share links help you return to the same setup without leaking freeform text into the address bar.</p>
-        <div class="tool-search-results" id="tool-search-results" role="list" aria-label="Matching tools"></div>
+        <p class="workspace-hint" id="workspace-hint">Saved presets and share links now stay inside each tool panel, so repeat setups stay close to the work itself.</p>
         <div class="quick-collections">
           <section class="collection-card" aria-labelledby="favorites-title">
             <div class="collection-header">
@@ -554,8 +1118,8 @@
     <section class="section-band" id="about-aegis" aria-labelledby="about-aegis-title">
       <div class="section-heading">
         <p class="eyebrow">Online Utility Toolkit</p>
-        <h2 id="about-aegis-title">Free browser tools for passwords, text cleanup, QR codes, timers, timezones, and conversions</h2>
-        <p>Aegis brings common utility tasks into one browser workspace so you can generate secure passwords, convert text, count characters, create QR codes, compare timezones, run timers, produce random numbers, and convert units without switching between sites.</p>
+        <h2 id="about-aegis-title">Free browser tools for passwords, JSON, encoding, QR codes, time, hashes, and conversions</h2>
+        <p>Aegis brings common utility tasks into one browser workspace so you can generate secure passwords, hash text or files, validate JSON, encode or decode text, create QR codes, compare timestamps, run timers, produce random numbers, generate UUIDs, and convert units without switching between sites.</p>
       </div>
 
       <div class="seo-grid seo-grid-highlights">
@@ -578,13 +1142,17 @@
       <div class="section-heading compact">
         <p class="eyebrow">Tool Directory</p>
         <h2 id="tool-directory-title">Included tools</h2>
-        <p>These are the utilities currently bundled into Aegis.</p>
+        <p>These are the utilities currently bundled into Aegis. Use header search or <span class="tool-directory-inline-callout">All tools</span> to jump straight into the workspace.</p>
       </div>
 
-      <div class="seo-grid">
+      <div class="seo-grid tool-directory-grid">
         <article class="seo-card">
           <h3><a href="./?tool=password#password">Password generator and strength checker</a></h3>
           <p>Create random passwords with configurable length, character sets, and instant strength feedback.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=hash#hash">Hash generator and checksum tool</a></h3>
+          <p>Generate MD5 and SHA hashes for text snippets or local files without sending them off-device.</p>
         </article>
         <article class="seo-card">
           <h3><a href="./?tool=case#case">Text case converter</a></h3>
@@ -593,6 +1161,14 @@
         <article class="seo-card">
           <h3><a href="./?tool=counter#counter">Character and word counter</a></h3>
           <p>Measure characters, words, and sentences while drafting copy, notes, or content snippets.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=json#json">JSON formatter and validator</a></h3>
+          <p>Validate pasted JSON, switch between pretty and minified output, and optionally sort keys recursively.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=encode#encode">Base64 and URL encoder-decoder</a></h3>
+          <p>Encode or decode UTF-8 text with standard Base64, URL-safe Base64, or percent-encoding.</p>
         </article>
         <article class="seo-card">
           <h3><a href="./?tool=qr#qr">QR code generator</a></h3>
@@ -607,6 +1183,10 @@
           <p>Translate a chosen date and time between UTC and common global timezones.</p>
         </article>
         <article class="seo-card">
+          <h3><a href="./?tool=datetime#datetime">Date difference and timestamp converter</a></h3>
+          <p>Parse Unix timestamps or ISO-like dates, inspect UTC output, and calculate exact elapsed time between dates.</p>
+        </article>
+        <article class="seo-card">
           <h3><a href="./?tool=timer#timer">Countdown timer and stopwatch</a></h3>
           <p>Run a countdown, track elapsed time, store laps, and enable browser-based alerts.</p>
         </article>
@@ -615,10 +1195,15 @@
           <p>Generate secure random integers for one-off picks or multi-value sets with uniqueness controls.</p>
         </article>
         <article class="seo-card">
+          <h3><a href="./?tool=uuid#uuid">UUID generator</a></h3>
+          <p>Create batches of RFC 4122 version 4 UUIDs with lowercase, uppercase, braced, and export-friendly layouts.</p>
+        </article>
+        <article class="seo-card">
           <h3><a href="./?tool=converter#converter">Unit converter</a></h3>
           <p>Convert between common length, weight, temperature, and digital storage units instantly.</p>
         </article>
       </div>
+      <p class="tool-directory-mobile-note">Showing a shorter list here on mobile. Use search or the All tools drawer for the full toolkit.</p>
     </section>
 
     <section class="section-band" id="faq" aria-labelledby="faq-title">

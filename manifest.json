@@ -1,7 +1,7 @@
 {
   "name": "Aegis",
   "short_name": "Aegis",
-  "description": "A static utility toolkit with everyday tools for text, time, numbers, units, and quick sharing.",
+  "description": "A static utility toolkit for passwords, JSON, encoding, hashes, timestamps, numbers, units, and quick sharing.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

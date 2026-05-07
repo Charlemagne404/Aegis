@@ -13,7 +13,7 @@
       "@id": "https://charlemagne404.github.io/Aegis/#website",
       "url": "https://charlemagne404.github.io/Aegis/",
       "name": "Aegis",
-      "description": "Free online utility toolkit for passwords, QR codes, text conversion, timezone conversion, timers, random numbers, and unit conversion.",
+      "description": "Free online utility toolkit for passwords, JSON formatting, QR codes, encoding, hashing, timestamps, random numbers, and unit conversion.",
       "inLanguage": "en",
       "publisher": {
         "@id": "https://charlemagne404.github.io/Aegis/#organization"
@@ -28,7 +28,7 @@
       "operatingSystem": "Web Browser",
       "browserRequirements": "Requires JavaScript",
       "isAccessibleForFree": true,
-      "description": "Free browser-based utility toolkit with password generation, QR codes, text tools, timezone conversion, timers, random numbers, and unit conversion.",
+      "description": "Free browser-based utility toolkit with password generation, JSON formatting, QR codes, encoding, hashing, timestamps, random numbers, and unit conversion.",
       "offers": {
         "@type": "Offer",
         "price": "0",
@@ -36,13 +36,18 @@
       },
       "featureList": [
         "Password generator and strength checker",
+        "Hash generator and checksum tool",
         "Text case converter",
         "Character and word counter",
+        "JSON formatter and validator",
+        "Base64 and URL encoder-decoder",
         "QR code generator",
         "Connection speed test",
         "Timezone converter",
+        "Date difference and timestamp converter",
         "Countdown timer and stopwatch",
         "Random number generator",
+        "UUID generator",
         "Unit converter"
       ],
       "publisher": {
