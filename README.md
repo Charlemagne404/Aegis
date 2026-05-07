@@ -23,20 +23,23 @@ Included tools:
 - `js/tools.js` contains the tool registry and each tool module.
 - `speed-test-config.json` controls the live speed test endpoints and keeps the UI disabled until the feature is configured.
 
-## Speed test setup
+## Run locally
 
-The connection speed test frontend is ready, but it still needs host-side endpoints before it can run live measurements:
+The latest repo includes a small Node backend that serves the site, health endpoints, and live speed-test routes.
 
-- `GET /speedtest/ping` for low-latency round trips
-- `GET /speedtest/download?bytes=...` to return uncached binary payloads
-- `POST /speedtest/upload` to accept and discard uploaded sample data
-
-After those endpoints exist, update `speed-test-config.json` with your real URLs and set `enabled` to `true`.
-
-Run locally with any static server, for example:
+Create a local `.env` from `.env.example`, then start the backend:
 
 ```sh
-python3 -m http.server 5173
+cp .env.example .env
+npm start
+```
+
+If port `3000` is already in use on your machine, change `PORT` in `.env` to a free local port.
+
+For auto-restart during development:
+
+```sh
+npm run dev
 ```
 
 ## Web essentials included
