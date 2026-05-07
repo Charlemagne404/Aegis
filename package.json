@@ -1,0 +1,15 @@
+{
+  "name": "aegis",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aegis utility toolkit with a local Node backend for site hosting, health checks, and speed test endpoints.",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch server/index.js",
+    "start": "node server/index.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

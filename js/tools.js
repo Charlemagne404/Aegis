@@ -31,9 +31,10 @@ export const TOOLS = [
   },
   {
     id: 'speed',
-    title: 'Internet speed test',
+    title: 'Connection speed test',
     category: 'Network',
-    summary: 'A polished browser mockup for latency, download, and upload readings.',
+    summary: 'Measure ping, jitter, download, and upload speeds against your configured speed test server.',
+    keywords: 'network speed test latency ping jitter bandwidth download upload',
     icon: icon('<path d="M12 19a7 7 0 1 0-7-7"/><path d="M12 12l4-4"/><path d="M4.6 17.4 3 19"/><path d="M20.9 19l-1.5-1.6"/>'),
   },
   {
@@ -400,13 +401,19 @@ function initQrGenerator() {
 
 function initSpeedTest() {
   const startButton = $('#speed-start');
+  const resetButton = $('#speed-reset');
   const ring = $('.gauge-ring');
   const progressNode = $('#speed-progress');
   const phaseNode = $('#speed-phase');
+  const serverNode = $('#speed-server');
+  const noteNode = $('#speed-note-inline');
+  const configStateNode = $('#speed-config-state');
   const pingNode = $('#speed-ping');
+  const jitterNode = $('#speed-jitter');
   const downloadNode = $('#speed-download');
   const uploadNode = $('#speed-upload');
-  let interval = null;
+  let controller = null;
+  let config = null;
 
   const setProgress = (progress) => {
     const rounded = Math.round(progress);
@@ -416,48 +423,391 @@ function initSpeedTest() {
 
   const resetMetrics = () => {
     safeText(pingNode, '--');
+    safeText(jitterNode, '--');
     safeText(downloadNode, '--');
     safeText(uploadNode, '--');
     setProgress(0);
   };
 
-  startButton?.addEventListener('click', () => {
-    window.clearInterval(interval);
+  const setButtonState = ({ ready = false, running = false }) => {
+    if (startButton) {
+      startButton.disabled = !ready && !running;
+      safeText(startButton, running ? 'Cancel test' : 'Start test');
+    }
+
+    if (resetButton) {
+      resetButton.disabled = false;
+    }
+  };
+
+  const showStatus = (message, stateLabel = 'Setup required') => {
+    safeText(configStateNode, stateLabel);
+    safeText(noteNode, message);
+  };
+
+  const restoreIdleState = () => {
+    safeText(serverNode, `Server: ${config?.serverLabel || 'not configured'}`);
+    safeText(phaseNode, config?.ready ? 'Ready to test' : (config ? 'Awaiting configuration' : 'Configuration missing'));
+
+    if (config?.ready) {
+      showStatus(
+        'Live browser test is ready. Results are approximate and depend on browser, device, and route conditions.',
+        'Ready',
+      );
+      setButtonState({ ready: true });
+      return;
+    }
+
+    showStatus(describeSpeedTestConfigIssue(config));
+    setButtonState({ ready: false });
+  };
+
+  const applyConfig = (nextConfig, errorMessage = '') => {
+    config = nextConfig;
+    if (!config) {
+      safeText(serverNode, 'Server: not configured');
+      safeText(phaseNode, 'Configuration missing');
+      showStatus(errorMessage || 'Add speed-test-config.json to this site to enable live testing.');
+      setButtonState({ ready: false });
+      return;
+    }
+
+    if (!config.ready) {
+      safeText(serverNode, `Server: ${config.serverLabel}`);
+      safeText(phaseNode, 'Awaiting configuration');
+      showStatus(errorMessage || describeSpeedTestConfigIssue(config));
+      setButtonState({ ready: false });
+      return;
+    }
+
+    restoreIdleState();
+  };
+
+  const loadConfig = async () => {
+    if (window.location.protocol === 'file:') {
+      applyConfig(null, 'Serve the site over http:// or https:// before running the speed test.');
+      return;
+    }
+
+    safeText(phaseNode, 'Loading configuration');
+    safeText(serverNode, 'Server: loading');
+    showStatus('Reading speed-test-config.json from this site.', 'Loading');
+    if (startButton) startButton.disabled = true;
+
+    try {
+      applyConfig(await fetchSpeedTestConfig());
+    } catch (error) {
+      applyConfig(null, error.message || 'Unable to read speed-test-config.json.');
+    }
+  };
+
+  startButton?.addEventListener('click', async () => {
+    if (controller) {
+      controller.abort();
+      return;
+    }
+
+    if (!config?.ready) {
+      showStatus(describeSpeedTestConfigIssue(config));
+      return;
+    }
+
+    controller = new AbortController();
     resetMetrics();
+    safeText(serverNode, `Server: ${config.serverLabel}`);
+    showStatus('Running live requests against your configured speed test server.', 'Live');
+    setButtonState({ ready: true, running: true });
 
-    const finalPing = randomInt(8, 38);
-    const finalDownload = randomFloat(82, 520, 1);
-    const finalUpload = randomFloat(18, 140, 1);
-    let progress = 0;
+    try {
+      safeText(phaseNode, 'Measuring latency');
+      const latency = await measureSpeedTestLatency(config, controller.signal, (completed, total) => {
+        setProgress((completed / total) * 20);
+        safeText(phaseNode, `Measuring latency ${completed}/${total}`);
+      });
+      safeText(pingNode, formatMetric(latency.ping));
+      safeText(jitterNode, formatMetric(latency.jitter));
 
-    startButton.disabled = true;
-    safeText(phaseNode, 'Pinging');
+      safeText(phaseNode, 'Testing download');
+      const download = await measureSpeedTestDownload(config, controller.signal, (fraction, sampleIndex, totalSamples) => {
+        setProgress(20 + (fraction * 50));
+        safeText(phaseNode, `Testing download ${sampleIndex}/${totalSamples}`);
+      });
+      safeText(downloadNode, formatMetric(download.mbps));
 
-    interval = window.setInterval(() => {
-      progress = clamp(progress + randomFloat(2.2, 5.8, 1), 0, 100);
-      setProgress(progress);
+      safeText(phaseNode, 'Testing upload');
+      const upload = await measureSpeedTestUpload(config, controller.signal, (fraction, sampleIndex, totalSamples) => {
+        setProgress(70 + (fraction * 30));
+        safeText(phaseNode, `Testing upload ${sampleIndex}/${totalSamples}`);
+      });
+      safeText(uploadNode, formatMetric(upload.mbps));
 
-      if (progress < 28) {
-        safeText(phaseNode, 'Pinging');
-        safeText(pingNode, String(Math.round((finalPing * progress) / 28)));
-      } else if (progress < 72) {
-        safeText(phaseNode, 'Testing download');
-        safeText(pingNode, String(finalPing));
-        safeText(downloadNode, formatNumber(finalDownload * ((progress - 28) / 44), 1));
-      } else if (progress < 100) {
-        safeText(phaseNode, 'Testing upload');
-        safeText(downloadNode, formatNumber(finalDownload, 1));
-        safeText(uploadNode, formatNumber(finalUpload * ((progress - 72) / 28), 1));
+      setProgress(100);
+      safeText(phaseNode, 'Test complete');
+      showStatus('Latest run completed successfully. Run it again to compare conditions.', 'Complete');
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        safeText(phaseNode, 'Test cancelled');
+        showStatus('The test was cancelled before completion.', 'Cancelled');
       } else {
-        window.clearInterval(interval);
-        safeText(phaseNode, 'Mock result ready');
-        safeText(pingNode, String(finalPing));
-        safeText(downloadNode, formatNumber(finalDownload, 1));
-        safeText(uploadNode, formatNumber(finalUpload, 1));
-        startButton.disabled = false;
+        safeText(phaseNode, 'Test failed');
+        showStatus(error.message || 'The speed test could not complete.', 'Error');
       }
-    }, 120);
+    } finally {
+      controller = null;
+      setButtonState({ ready: Boolean(config?.ready), running: false });
+    }
   });
+
+  resetButton?.addEventListener('click', () => {
+    controller?.abort();
+    resetMetrics();
+    restoreIdleState();
+  });
+
+  resetMetrics();
+  loadConfig();
+}
+
+async function fetchSpeedTestConfig() {
+  const response = await fetch(resolveSpeedTestUrl('speed-test-config.json'), {
+    cache: 'no-store',
+  });
+
+  if (!response.ok) {
+    throw new Error('speed-test-config.json was not found on this site.');
+  }
+
+  try {
+    return normalizeSpeedTestConfig(await response.json());
+  } catch {
+    throw new Error('speed-test-config.json is not valid JSON.');
+  }
+}
+
+function normalizeSpeedTestConfig(rawConfig = {}) {
+  const latency = rawConfig.latency || {};
+  const download = rawConfig.download || {};
+  const upload = rawConfig.upload || {};
+
+  const config = {
+    enabled: Boolean(rawConfig.enabled),
+    serverLabel: String(rawConfig.serverLabel || rawConfig.server || 'Configured speed test server'),
+    latencyUrl: String(latency.url || rawConfig.latencyUrl || '').trim(),
+    downloadUrl: String(download.url || rawConfig.downloadUrl || '').trim(),
+    uploadUrl: String(upload.url || rawConfig.uploadUrl || '').trim(),
+    latencyAttempts: toPositiveInteger(latency.attempts || rawConfig.latencyAttempts, 5),
+    latencyTimeoutMs: toPositiveInteger(latency.timeoutMs || rawConfig.latencyTimeoutMs, 4000),
+    downloadTimeoutMs: toPositiveInteger(download.timeoutMs || rawConfig.downloadTimeoutMs, 20000),
+    uploadTimeoutMs: toPositiveInteger(upload.timeoutMs || rawConfig.uploadTimeoutMs, 20000),
+    downloadSizes: normalizeByteList(download.sizes || rawConfig.downloadSizes, [250000, 1000000, 5000000, 10000000]),
+    uploadSizes: normalizeByteList(upload.sizes || rawConfig.uploadSizes, [250000, 1000000, 4000000]),
+  };
+
+  config.ready = Boolean(config.enabled && config.latencyUrl && config.downloadUrl && config.uploadUrl);
+  return config;
+}
+
+function describeSpeedTestConfigIssue(config) {
+  if (!config) {
+    return 'Add speed-test-config.json to this site and point it at your speed test endpoints.';
+  }
+
+  if (!config.enabled) {
+    return 'speed-test-config.json is present, but `enabled` is still set to false.';
+  }
+
+  const missing = [
+    !config.latencyUrl && 'latencyUrl',
+    !config.downloadUrl && 'downloadUrl',
+    !config.uploadUrl && 'uploadUrl',
+  ].filter(Boolean);
+
+  if (missing.length) {
+    return `Add ${missing.join(', ')} to speed-test-config.json before running the test.`;
+  }
+
+  return 'The speed test configuration is incomplete.';
+}
+
+async function measureSpeedTestLatency(config, signal, onProgress) {
+  const attempts = [];
+
+  for (let index = 0; index < config.latencyAttempts; index += 1) {
+    const result = await runSpeedTestRequest({
+      url: config.latencyUrl,
+      timeoutMs: config.latencyTimeoutMs,
+      signal,
+    });
+    attempts.push(result.elapsedMs);
+    onProgress?.(index + 1, config.latencyAttempts);
+  }
+
+  const sorted = [...attempts].sort((left, right) => left - right);
+  const middle = Math.floor(sorted.length / 2);
+  const ping = sorted.length % 2 === 0
+    ? (sorted[middle - 1] + sorted[middle]) / 2
+    : sorted[middle];
+  const jitter = attempts.length < 2
+    ? 0
+    : attempts
+      .slice(1)
+      .reduce((total, sample, index) => total + Math.abs(sample - attempts[index]), 0) / (attempts.length - 1);
+
+  return { ping, jitter };
+}
+
+async function measureSpeedTestDownload(config, signal, onProgress) {
+  const totalExpectedBytes = config.downloadSizes.reduce((total, bytes) => total + bytes, 0);
+  let completedBytes = 0;
+  let totalMeasuredBytes = 0;
+  let totalElapsedMs = 0;
+
+  for (let index = 0; index < config.downloadSizes.length; index += 1) {
+    const sampleBytes = config.downloadSizes[index];
+    const result = await runSpeedTestRequest({
+      url: config.downloadUrl,
+      bytes: sampleBytes,
+      timeoutMs: config.downloadTimeoutMs,
+      signal,
+      onProgress: (loadedBytes) => {
+        const fraction = clamp((completedBytes + loadedBytes) / totalExpectedBytes, 0, 1);
+        onProgress?.(fraction, index + 1, config.downloadSizes.length);
+      },
+    });
+
+    completedBytes += sampleBytes;
+    totalMeasuredBytes += result.bytesTransferred;
+    totalElapsedMs += result.elapsedMs;
+    onProgress?.(clamp(completedBytes / totalExpectedBytes, 0, 1), index + 1, config.downloadSizes.length);
+  }
+
+  return {
+    mbps: bytesToMbps(totalMeasuredBytes, totalElapsedMs),
+  };
+}
+
+async function measureSpeedTestUpload(config, signal, onProgress) {
+  const totalExpectedBytes = config.uploadSizes.reduce((total, bytes) => total + bytes, 0);
+  let completedBytes = 0;
+  let totalElapsedMs = 0;
+
+  for (let index = 0; index < config.uploadSizes.length; index += 1) {
+    const sampleBytes = config.uploadSizes[index];
+    const payload = new Uint8Array(sampleBytes);
+    const result = await runSpeedTestRequest({
+      url: config.uploadUrl,
+      method: 'POST',
+      bytes: sampleBytes,
+      body: payload.buffer,
+      timeoutMs: config.uploadTimeoutMs,
+      signal,
+      onUploadProgress: (loadedBytes) => {
+        const fraction = clamp((completedBytes + loadedBytes) / totalExpectedBytes, 0, 1);
+        onProgress?.(fraction, index + 1, config.uploadSizes.length);
+      },
+    });
+
+    completedBytes += sampleBytes;
+    totalElapsedMs += result.elapsedMs;
+    onProgress?.(clamp(completedBytes / totalExpectedBytes, 0, 1), index + 1, config.uploadSizes.length);
+  }
+
+  return {
+    mbps: bytesToMbps(totalExpectedBytes, totalElapsedMs),
+  };
+}
+
+function runSpeedTestRequest({
+  url,
+  method = 'GET',
+  bytes = 0,
+  body = null,
+  timeoutMs = 15000,
+  signal,
+  onProgress,
+  onUploadProgress,
+}) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    const requestUrl = resolveSpeedTestUrl(url, bytes);
+    const startedAt = performance.now();
+    let abortedExternally = false;
+
+    xhr.open(method, requestUrl, true);
+    xhr.responseType = 'arraybuffer';
+    xhr.timeout = timeoutMs;
+
+    xhr.onprogress = (event) => {
+      const loaded = event.lengthComputable ? event.loaded : (xhr.response?.byteLength || 0);
+      onProgress?.(loaded);
+    };
+
+    xhr.upload.onprogress = (event) => {
+      const loaded = event.lengthComputable ? event.loaded : 0;
+      onUploadProgress?.(loaded);
+    };
+
+    xhr.onload = () => {
+      if (xhr.status < 200 || xhr.status >= 300) {
+        reject(new Error(`Speed test server responded with ${xhr.status}.`));
+        return;
+      }
+
+      const elapsedMs = performance.now() - startedAt;
+      const bytesTransferred = xhr.response?.byteLength || bytes || 0;
+      resolve({ elapsedMs, bytesTransferred });
+    };
+
+    xhr.onerror = () => reject(new Error('The speed test server could not be reached. Check CORS, routing, and endpoint availability.'));
+    xhr.ontimeout = () => reject(new Error('The speed test request timed out. Increase the timeout or reduce the sample size.'));
+    xhr.onabort = () => reject(abortedExternally ? new DOMException('Aborted', 'AbortError') : new Error('The speed test request was aborted.'));
+
+    const abort = () => {
+      abortedExternally = true;
+      xhr.abort();
+    };
+
+    signal?.addEventListener('abort', abort, { once: true });
+    xhr.send(body);
+  });
+}
+
+function resolveSpeedTestUrl(path, bytes = 0) {
+  const templatedPath = bytes ? String(path).replaceAll('{bytes}', String(bytes)) : String(path);
+  const resolved = new URL(templatedPath, window.location.href);
+
+  if (bytes && !String(path).includes('{bytes}') && !resolved.searchParams.has('bytes')) {
+    resolved.searchParams.set('bytes', String(bytes));
+  }
+
+  resolved.searchParams.set('cacheBust', `${Date.now()}-${Math.random().toString(16).slice(2)}`);
+  return resolved.toString();
+}
+
+function normalizeByteList(input, fallback) {
+  if (!Array.isArray(input)) return fallback;
+
+  const parsed = input
+    .map((value) => Number(value))
+    .filter((value) => Number.isFinite(value) && value > 0)
+    .map((value) => Math.round(value));
+
+  return parsed.length ? parsed : fallback;
+}
+
+function toPositiveInteger(value, fallback) {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) return fallback;
+  return Math.round(parsed);
+}
+
+function bytesToMbps(bytes, elapsedMs) {
+  if (!bytes || !elapsedMs) return 0;
+  return (bytes * 8) / (elapsedMs / 1000) / 1_000_000;
+}
+
+function formatMetric(value) {
+  return formatNumber(value, value >= 100 ? 0 : 1);
 }
 
 function initTimezoneConverter() {
@@ -571,6 +921,7 @@ function initTimerTool() {
       window.clearInterval(timerFrame);
       setTimerStatus('Done');
       safeText(timerStart, 'Start');
+      window.dispatchEvent(new CustomEvent('aegis:timer-complete'));
       return;
     }
   };

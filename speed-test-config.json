@@ -1,0 +1,13 @@
+{
+  "enabled": false,
+  "serverLabel": "Replace with your nearest test server",
+  "latencyUrl": "https://example.com/speedtest/ping",
+  "downloadUrl": "https://example.com/speedtest/download?bytes={bytes}",
+  "uploadUrl": "https://example.com/speedtest/upload",
+  "latencyAttempts": 5,
+  "downloadSizes": [250000, 1000000, 5000000, 10000000],
+  "uploadSizes": [250000, 1000000, 4000000],
+  "latencyTimeoutMs": 4000,
+  "downloadTimeoutMs": 20000,
+  "uploadTimeoutMs": 20000
+}

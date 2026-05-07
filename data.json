@@ -13,40 +13,79 @@
       "@id": "https://charlemagne404.github.io/Aegis/#website",
       "url": "https://charlemagne404.github.io/Aegis/",
       "name": "Aegis",
-      "description": "A clean utility toolkit with everyday tools for time, text, numbers, units, and network checks.",
+      "description": "Free online utility toolkit for passwords, QR codes, text conversion, timezone conversion, timers, random numbers, and unit conversion.",
       "inLanguage": "en",
       "publisher": {
         "@id": "https://charlemagne404.github.io/Aegis/#organization"
       }
     },
     {
-      "@type": "WebApplication",
+      "@type": "SoftwareApplication",
       "@id": "https://charlemagne404.github.io/Aegis/#webapp",
       "url": "https://charlemagne404.github.io/Aegis/",
       "name": "Aegis",
       "applicationCategory": "UtilitiesApplication",
-      "operatingSystem": "Any",
+      "operatingSystem": "Web Browser",
       "browserRequirements": "Requires JavaScript",
-      "description": "A static browser toolkit with utilities for passwords, text conversion, counting, QR generation, timezones, timers, random values, and unit conversion.",
+      "isAccessibleForFree": true,
+      "description": "Free browser-based utility toolkit with password generation, QR codes, text tools, timezone conversion, timers, random numbers, and unit conversion.",
       "offers": {
         "@type": "Offer",
         "price": "0",
         "priceCurrency": "USD"
       },
       "featureList": [
-        "Password generator",
+        "Password generator and strength checker",
         "Text case converter",
         "Character and word counter",
         "QR code generator",
-        "Mock speed test",
+        "Connection speed test",
         "Timezone converter",
-        "Timer and stopwatch",
+        "Countdown timer and stopwatch",
         "Random number generator",
         "Unit converter"
       ],
       "publisher": {
         "@id": "https://charlemagne404.github.io/Aegis/#organization"
       }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://charlemagne404.github.io/Aegis/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Is Aegis free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Aegis is a free browser-based utility toolkit."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need to install anything to use Aegis?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Aegis runs as a static website in the browser without installation."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Does Aegis store my tool activity?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Aegis stores device-local preferences such as theme, favorites, recent tools, and saved presets in the browser so the workspace can remember them between visits."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Why might the speed test be unavailable?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The speed test stays unavailable until speed-test-config.json points at working latency, download, and upload endpoints with the right CORS and cache settings."
+          }
+        }
+      ]
     }
   ]
 }

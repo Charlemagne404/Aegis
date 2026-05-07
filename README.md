@@ -8,7 +8,9 @@ Included tools:
 - Text case converter
 - Character, word, and sentence counter
 - QR code generator with PNG download
-- Speed test mockup, timezone converter, timer, random number generator, and unit converter
+- Connection speed test shell, timezone converter, timer, random number generator, and unit converter
+- Tool search, favorites, recent tools, shareable stateful links, and saved presets/history for repeatable tools
+- Timer alerts with browser notifications, sound, and vibration
 
 ## Structure
 
@@ -16,6 +18,17 @@ Included tools:
 - `styles.css` contains the responsive Continental-inspired UI system.
 - `js/app.js` handles navigation, theme, search, filtering, and tool activation.
 - `js/tools.js` contains the tool registry and each tool module.
+- `speed-test-config.json` controls the live speed test endpoints and keeps the UI disabled until the feature is configured.
+
+## Speed test setup
+
+The connection speed test frontend is ready, but it still needs host-side endpoints before it can run live measurements:
+
+- `GET /speedtest/ping` for low-latency round trips
+- `GET /speedtest/download?bytes=...` to return uncached binary payloads
+- `POST /speedtest/upload` to accept and discard uploaded sample data
+
+After those endpoints exist, update `speed-test-config.json` with your real URLs and set `enabled` to `true`.
 
 Run locally with any static server, for example:
 

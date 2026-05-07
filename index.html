@@ -3,18 +3,126 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aegis | Utility Toolkit</title>
-  <meta name="description" content="Aegis is a clean utility toolkit from Continental Studios with everyday tools for time, numbers, units, and network checks.">
+  <title>Aegis | Free Online Utility Toolkit for Passwords, QR Codes, Text, Time, and Unit Conversion</title>
+  <meta name="description" content="Aegis is a free online utility toolkit with a password generator, QR code generator, text tools, timezone conversion, timers, random numbers, and unit conversion in one browser workspace.">
   <meta name="robots" content="index,follow,max-image-preview:large">
   <meta name="theme-color" content="#07131b">
   <meta name="application-name" content="Aegis">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Aegis | Free Online Utility Toolkit">
+  <meta property="og:description" content="Use Aegis for password generation, QR codes, text conversion, timers, timezone conversion, random numbers, and unit conversion in one browser-based toolkit.">
+  <meta property="og:url" content="https://charlemagne404.github.io/Aegis/">
+  <meta property="og:site_name" content="Aegis">
+  <meta property="og:image" content="https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png">
+  <meta property="og:image:alt" content="Aegis utility toolkit icon">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Aegis | Free Online Utility Toolkit">
+  <meta name="twitter:description" content="A free browser toolkit for passwords, QR codes, text tools, timers, timezone conversion, random numbers, and unit conversion.">
+  <meta name="twitter:image" content="https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png">
   <link rel="canonical" href="https://charlemagne404.github.io/Aegis/">
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="icon" href="./favicon.png" type="image/png" sizes="64x64">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png" sizes="180x180">
   <link rel="manifest" href="./manifest.json">
   <link rel="alternate" type="application/json" href="./data.json" title="Aegis structured data">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap">
   <link rel="stylesheet" href="styles.css">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Organization",
+          "@id": "https://charlemagne404.github.io/Aegis/#organization",
+          "name": "Continental Studios",
+          "url": "https://charlemagne404.github.io/Aegis/",
+          "logo": "https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png"
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://charlemagne404.github.io/Aegis/#website",
+          "url": "https://charlemagne404.github.io/Aegis/",
+          "name": "Aegis",
+          "description": "Free online utility toolkit for passwords, QR codes, text conversion, timezone conversion, timers, random numbers, and unit conversion.",
+          "inLanguage": "en",
+          "publisher": {
+            "@id": "https://charlemagne404.github.io/Aegis/#organization"
+          }
+        },
+        {
+          "@type": "SoftwareApplication",
+          "@id": "https://charlemagne404.github.io/Aegis/#app",
+          "name": "Aegis",
+          "url": "https://charlemagne404.github.io/Aegis/",
+          "applicationCategory": "UtilitiesApplication",
+          "operatingSystem": "Web Browser",
+          "browserRequirements": "Requires JavaScript",
+          "isAccessibleForFree": true,
+          "image": "https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png",
+          "description": "Free browser-based utility toolkit with password generation, QR codes, text tools, timezone conversion, timers, random numbers, and unit conversion.",
+          "featureList": [
+            "Password generator and strength checker",
+            "Text case converter",
+            "Character and word counter",
+            "QR code generator",
+            "Connection speed test",
+            "Timezone converter",
+            "Countdown timer and stopwatch",
+            "Random number generator",
+            "Unit converter"
+          ],
+          "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+          },
+          "publisher": {
+            "@id": "https://charlemagne404.github.io/Aegis/#organization"
+          }
+        },
+        {
+          "@type": "FAQPage",
+          "@id": "https://charlemagne404.github.io/Aegis/#faq",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Is Aegis free to use?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Yes. Aegis is a free browser-based utility toolkit."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Do I need to install anything to use Aegis?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "No. Aegis runs as a static website in the browser without installation."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Does Aegis store my tool activity?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Aegis stores device-local preferences such as theme, favorites, recent tools, and saved presets in the browser so the workspace can remember them between visits."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Why might the speed test be unavailable?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "The speed test stays unavailable until speed-test-config.json points at working latency, download, and upload endpoints with the right CORS and cache settings."
+              }
+            }
+          ]
+        }
+      ]
+    }
+  </script>
   <script src="js/theme-init.js"></script>
 </head>
 <body>
@@ -32,7 +140,7 @@
         </span>
       </a>
 
-      <div class="top-tool-tabs" id="top-tool-tabs" role="tablist" aria-label="Tools"></div>
+      <div class="top-tool-tabs" id="top-tool-tabs" role="tablist" aria-label="Tools" aria-orientation="horizontal"></div>
 
       <button class="theme-toggle" type="button" data-theme-toggle aria-label="Switch color theme">
         <span data-theme-label>Theme</span>
@@ -43,14 +151,16 @@
   <main id="main-content">
     <section class="intro-section" id="home">
       <div class="hero-copy">
-        <h1>Aegis</h1>
-        <p class="hero-lede">Everyday tools in one calm workspace.</p>
+        <p class="eyebrow">Privacy-first utilities</p>
+        <h1>Aegis Utility Toolkit</h1>
+        <p class="hero-lede">Free online tools for passwords, QR codes, text conversion, timers, timezones, random numbers, and unit conversion.</p>
+        <p class="hero-support">Runs in your browser. Device-local workspace preferences stay on this device unless you explicitly copy a share link.</p>
       </div>
     </section>
 
     <section class="workbench-section" id="workbench" aria-label="Tool workspace">
       <div class="tool-panels">
-        <article class="tool-panel" id="password" data-tool-panel="password" aria-labelledby="password-title">
+        <article class="tool-panel" id="password" data-tool-panel="password" role="tabpanel" tabindex="0" aria-labelledby="tab-password">
           <div class="panel-header">
             <div>
               <p class="eyebrow">Security</p>
@@ -106,7 +216,7 @@
           </div>
         </article>
 
-        <article class="tool-panel" id="case" data-tool-panel="case" aria-labelledby="case-title" hidden>
+        <article class="tool-panel" id="case" data-tool-panel="case" role="tabpanel" tabindex="-1" aria-labelledby="tab-case" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Text</p>
@@ -136,7 +246,7 @@
           </div>
         </article>
 
-        <article class="tool-panel" id="counter" data-tool-panel="counter" aria-labelledby="counter-title" hidden>
+        <article class="tool-panel" id="counter" data-tool-panel="counter" role="tabpanel" tabindex="-1" aria-labelledby="tab-counter" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Text</p>
@@ -166,7 +276,7 @@
           </div>
         </article>
 
-        <article class="tool-panel" id="qr" data-tool-panel="qr" aria-labelledby="qr-title" hidden>
+        <article class="tool-panel" id="qr" data-tool-panel="qr" role="tabpanel" tabindex="-1" aria-labelledby="tab-qr" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Share</p>
@@ -192,26 +302,36 @@
           </div>
         </article>
 
-        <article class="tool-panel" id="speed" data-tool-panel="speed" aria-labelledby="speed-title" hidden>
+        <article class="tool-panel" id="speed" data-tool-panel="speed" role="tabpanel" tabindex="-1" aria-labelledby="speed-title" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Network</p>
-              <h3 id="speed-title">Speed test</h3>
+              <h3 id="speed-title">Connection speed test</h3>
+              <p class="panel-note">Runs from your browser against the server endpoints defined in <code>speed-test-config.json</code>. Results are approximate and should be treated as directional, not lab-grade measurements.</p>
             </div>
-            <button class="button button-primary" type="button" id="speed-start">Run mock test</button>
+            <div class="button-row speed-actions">
+              <button class="button button-primary" type="button" id="speed-start">Start test</button>
+              <button class="button button-secondary" type="button" id="speed-reset">Reset</button>
+            </div>
           </div>
 
-          <div class="speed-layout">
-            <div class="speed-gauge" aria-label="Mock speed test progress">
+          <div class="speed-layout" aria-describedby="speed-note-inline">
+            <div class="speed-gauge" aria-label="Connection speed test progress">
               <div class="gauge-ring">
                 <span id="speed-progress">0%</span>
               </div>
-              <p id="speed-phase">Waiting</p>
+              <p id="speed-phase">Waiting to start</p>
+              <p class="speed-server" id="speed-server">Server: not configured</p>
             </div>
             <div class="metric-list">
+              <p class="inline-status" id="speed-note-inline">Load a valid configuration to enable live testing.</p>
               <div class="metric-row">
                 <span>Ping</span>
                 <strong><span id="speed-ping">--</span> ms</strong>
+              </div>
+              <div class="metric-row">
+                <span>Jitter</span>
+                <strong><span id="speed-jitter">--</span> ms</strong>
               </div>
               <div class="metric-row">
                 <span>Download</span>
@@ -223,9 +343,22 @@
               </div>
             </div>
           </div>
+
+          <section class="tool-subpanel speed-setup" aria-labelledby="speed-setup-title">
+            <div class="subpanel-heading">
+              <h4 id="speed-setup-title">Setup status</h4>
+              <span id="speed-config-state">Loading</span>
+            </div>
+            <p class="speed-setup-copy">This frontend is ready for live measurements, but it still depends on three host-side endpoints: a fast latency responder, an uncached binary download route, and an upload sink. Finish those pieces, then update <code>speed-test-config.json</code>.</p>
+            <ul class="speed-checklist">
+              <li><code>GET</code> latency endpoint for quick round-trip checks</li>
+              <li><code>GET</code> download endpoint that returns the requested byte count</li>
+              <li><code>POST</code> upload endpoint that accepts and discards sample payloads</li>
+            </ul>
+          </section>
         </article>
 
-        <article class="tool-panel" id="timezone" data-tool-panel="timezone" aria-labelledby="timezone-title" hidden>
+        <article class="tool-panel" id="timezone" data-tool-panel="timezone" role="tabpanel" tabindex="-1" aria-labelledby="tab-timezone" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Time</p>
@@ -252,7 +385,7 @@
           <div class="clock-grid" id="timezone-clocks"></div>
         </article>
 
-        <article class="tool-panel" id="timer" data-tool-panel="timer" aria-labelledby="timer-title" hidden>
+        <article class="tool-panel" id="timer" data-tool-panel="timer" role="tabpanel" tabindex="-1" aria-labelledby="tab-timer" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Time</p>
@@ -281,6 +414,21 @@
                   <input type="number" id="timer-seconds" min="0" max="59" value="0">
                 </label>
               </div>
+              <div class="alert-options" aria-label="Timer alerts">
+                <label class="checkbox-field">
+                  <input type="checkbox" id="timer-notify">
+                  <span>Browser alert</span>
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="timer-sound" checked>
+                  <span>Sound</span>
+                </label>
+                <label class="checkbox-field">
+                  <input type="checkbox" id="timer-vibrate" checked>
+                  <span>Vibration</span>
+                </label>
+              </div>
+              <span class="inline-status" id="timer-alert-status">Alerts stay on this device.</span>
               <div class="button-row">
                 <button class="button button-primary" type="button" id="timer-start">Start</button>
                 <button class="button button-secondary" type="button" id="timer-pause">Pause</button>
@@ -304,7 +452,7 @@
           </div>
         </article>
 
-        <article class="tool-panel" id="random" data-tool-panel="random" aria-labelledby="random-title" hidden>
+        <article class="tool-panel" id="random" data-tool-panel="random" role="tabpanel" tabindex="-1" aria-labelledby="tab-random" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Numbers</p>
@@ -339,7 +487,7 @@
           </div>
         </article>
 
-        <article class="tool-panel" id="converter" data-tool-panel="converter" aria-labelledby="converter-title" hidden>
+        <article class="tool-panel" id="converter" data-tool-panel="converter" role="tabpanel" tabindex="-1" aria-labelledby="tab-converter" hidden>
           <div class="panel-header">
             <div>
               <p class="eyebrow">Measure</p>
@@ -370,17 +518,148 @@
         </article>
       </div>
     </section>
+
+    <section class="workspace-section" id="workspace" aria-labelledby="workspace-title">
+      <div class="section-heading compact">
+        <p class="eyebrow">Workspace</p>
+        <h2 id="workspace-title">Search, favorites, and saved setups</h2>
+        <p>Press <code>/</code> or <code>Ctrl/Cmd + K</code> to jump between tools. Search suggestions stay collapsed until you start looking.</p>
+      </div>
+      <aside class="workspace-hub" aria-label="Workspace shortcuts">
+        <label class="tool-search-shell" for="tool-search">
+          <span class="sr-only">Search tools</span>
+          <input type="search" id="tool-search" placeholder="Search tools or press /" autocomplete="off" spellcheck="false" aria-describedby="workspace-hint">
+        </label>
+        <p class="workspace-hint" id="workspace-hint">Pinned tools, saved presets, and explicit share links help you return to the same setup without leaking freeform text into the address bar.</p>
+        <div class="tool-search-results" id="tool-search-results" role="list" aria-label="Matching tools"></div>
+        <div class="quick-collections">
+          <section class="collection-card" aria-labelledby="favorites-title">
+            <div class="collection-header">
+              <h2 id="favorites-title">Favorites</h2>
+              <span>Saved on this device</span>
+            </div>
+            <div class="chip-list" id="favorite-tools"></div>
+          </section>
+          <section class="collection-card" aria-labelledby="recents-title">
+            <div class="collection-header">
+              <h2 id="recents-title">Recent</h2>
+              <span>Jump back into work</span>
+            </div>
+            <div class="chip-list" id="recent-tools"></div>
+          </section>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section-band" id="about-aegis" aria-labelledby="about-aegis-title">
+      <div class="section-heading">
+        <p class="eyebrow">Online Utility Toolkit</p>
+        <h2 id="about-aegis-title">Free browser tools for passwords, text cleanup, QR codes, timers, timezones, and conversions</h2>
+        <p>Aegis brings common utility tasks into one browser workspace so you can generate secure passwords, convert text, count characters, create QR codes, compare timezones, run timers, produce random numbers, and convert units without switching between sites.</p>
+      </div>
+
+      <div class="seo-grid seo-grid-highlights">
+        <article class="seo-card">
+          <h3>One place for everyday utilities</h3>
+          <p>The toolkit groups frequently used text, time, number, sharing, and measurement tools into a single searchable interface.</p>
+        </article>
+        <article class="seo-card">
+          <h3>Browser-based and lightweight</h3>
+          <p>Aegis runs as a static site, which keeps the experience fast to load and easy to deploy on simple hosting.</p>
+        </article>
+        <article class="seo-card">
+          <h3>Built for repeat use</h3>
+          <p>Favorites, recent tools, saved presets, and shareable state links help visitors return to the same utility setup quickly.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-band" id="tool-directory" aria-labelledby="tool-directory-title">
+      <div class="section-heading compact">
+        <p class="eyebrow">Tool Directory</p>
+        <h2 id="tool-directory-title">Included tools</h2>
+        <p>These are the utilities currently bundled into Aegis.</p>
+      </div>
+
+      <div class="seo-grid">
+        <article class="seo-card">
+          <h3><a href="./?tool=password#password">Password generator and strength checker</a></h3>
+          <p>Create random passwords with configurable length, character sets, and instant strength feedback.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=case#case">Text case converter</a></h3>
+          <p>Convert copied text to lowercase, uppercase, title case, camelCase, or snake_case with live previews.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=counter#counter">Character and word counter</a></h3>
+          <p>Measure characters, words, and sentences while drafting copy, notes, or content snippets.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=qr#qr">QR code generator</a></h3>
+          <p>Generate a QR code from text or a URL and export it as a PNG for sharing.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=speed#speed">Connection speed test</a></h3>
+          <p>A browser-based speed test shell that measures ping, jitter, download, and upload against your configured test server.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=timezone#timezone">Timezone converter</a></h3>
+          <p>Translate a chosen date and time between UTC and common global timezones.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=timer#timer">Countdown timer and stopwatch</a></h3>
+          <p>Run a countdown, track elapsed time, store laps, and enable browser-based alerts.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=random#random">Random number generator</a></h3>
+          <p>Generate secure random integers for one-off picks or multi-value sets with uniqueness controls.</p>
+        </article>
+        <article class="seo-card">
+          <h3><a href="./?tool=converter#converter">Unit converter</a></h3>
+          <p>Convert between common length, weight, temperature, and digital storage units instantly.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-band" id="faq" aria-labelledby="faq-title">
+      <div class="section-heading compact">
+        <p class="eyebrow">FAQ</p>
+        <h2 id="faq-title">Common questions about Aegis</h2>
+      </div>
+
+      <div class="faq-grid">
+        <details class="faq-item">
+          <summary>Is Aegis free to use?</summary>
+          <p>Yes. Aegis is available as a free browser-based utility toolkit.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Do I need to install anything?</summary>
+          <p>No. The site runs in the browser and can be used like a regular static web app.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Does Aegis store my tool activity?</summary>
+          <p>Aegis stores device-local preferences such as theme, favorites, recent tools, and saved presets in your browser so the workspace can remember them between visits.</p>
+        </details>
+        <details class="faq-item">
+          <summary>Why might the speed test be unavailable?</summary>
+          <p>The tool stays unavailable until <code>speed-test-config.json</code> points at working latency, download, and upload endpoints with the correct CORS and cache settings.</p>
+        </details>
+      </div>
+    </section>
   </main>
 
   <footer class="site-footer">
     <div class="footer-meta">
-      <div class="continental-signature" aria-label="A Continental Studios production">
+      <div class="continental-signature" aria-label="Made by Continental">
         <span class="continental-signature-copy">
-          <span>A Continental Studios production</span>
-          <img src="assets/branding/continental-wordmark-white.png" alt="Continental" width="172" height="28">
+          <span>Made by</span>
+          <img src="assets/branding/made-by-continental-white.png" alt="Continental" width="200" height="50">
         </span>
       </div>
       <nav class="footer-links" aria-label="Legal and site links">
+        <a href="https://github.com/Charlemagne404" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.patreon.com/cw/ContinentalStudios" target="_blank" rel="noopener noreferrer">Patreon</a>
+        <a href="https://contact.continental-hub.com" target="_blank" rel="noopener noreferrer">Contact</a>
         <a href="./privacy-policy.html">Privacy</a>
         <a href="./terms-of-service.html">Terms</a>
         <a href="./sitemap.xml">Sitemap</a>
