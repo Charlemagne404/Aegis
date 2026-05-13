@@ -102,7 +102,7 @@ test('site root serves the existing frontend', async () => {
     assert.equal(response.status, 200);
 
     const html = await response.text();
-    assert.match(html, /Aegis Utility Toolkit/u);
+    assert.match(html, /Utility tools, finally in one clean workspace\./u);
   } finally {
     await app.close();
   }

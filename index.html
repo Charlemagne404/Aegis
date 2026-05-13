@@ -185,15 +185,92 @@
 
   <main id="main-content">
     <section class="intro-section" id="home" data-view-mode="home">
-      <div class="hero-copy">
-        <p class="eyebrow">Privacy-first utilities</p>
-        <h1>Aegis Utility Toolkit</h1>
-        <p class="hero-lede">Free online tools for passwords, JSON, QR codes, encoding, hashes, UUIDs, timestamps, timers, timezones, random numbers, and unit conversion.</p>
-        <p class="hero-support">Runs in your browser. Device-local workspace preferences stay on this device unless you explicitly copy a share link.</p>
-      </div>
-      <div class="hero-actions">
-        <a class="button button-primary" href="./?tool=password#password">Open password generator</a>
-        <a class="button button-secondary" href="#tool-directory">Browse included tools</a>
+      <div class="hero-shell">
+        <div class="hero-copy">
+          <p class="eyebrow">Private browser utilities</p>
+          <h1>Utility tools, finally in one clean workspace.</h1>
+          <p class="hero-lede">Generate passwords, hash files, validate JSON, build QR codes, convert timestamps, and handle everyday utility work in one fast local-first browser toolkit.</p>
+          <p class="hero-support">Search with <kbd>/</kbd>, pin the tools you reuse, and copy exact tool-state links only when you need to share a setup.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="./?tool=password#password">Open password generator</a>
+            <a class="button button-secondary" href="#tool-directory">Browse included tools</a>
+          </div>
+          <div class="hero-trust-row" aria-label="Aegis highlights">
+            <div class="hero-trust-pill">
+              <strong>14</strong>
+              <span>browser tools</span>
+            </div>
+            <div class="hero-trust-pill">
+              <strong>Local</strong>
+              <span>saved preferences</span>
+            </div>
+            <div class="hero-trust-pill">
+              <strong>Share</strong>
+              <span>tool-state links</span>
+            </div>
+            <div class="hero-trust-pill">
+              <strong>Fast</strong>
+              <span>single workspace</span>
+            </div>
+          </div>
+          <div class="hero-launchpad" aria-label="Popular tools">
+            <button class="quick-launch-card" type="button" data-chip-tool="password" data-kind="favorite">
+              <strong>Password generator</strong>
+              <span>Secure defaults, entropy feedback, and instant copy.</span>
+            </button>
+            <button class="quick-launch-card" type="button" data-chip-tool="json" data-kind="recent">
+              <strong>JSON formatter</strong>
+              <span>Validate, minify, pretty print, and sort keys locally.</span>
+            </button>
+            <button class="quick-launch-card" type="button" data-chip-tool="timezone" data-kind="favorite">
+              <strong>Timezone converter</strong>
+              <span>Translate meeting times across common global zones.</span>
+            </button>
+            <button class="quick-launch-card" type="button" data-chip-tool="qr" data-kind="recent">
+              <strong>QR generator</strong>
+              <span>Create export-ready QR codes from text or URLs.</span>
+            </button>
+          </div>
+        </div>
+
+        <aside class="hero-showcase" aria-label="Featured workflows">
+          <div class="hero-showcase-head">
+            <p class="eyebrow">Start Here</p>
+            <h2>Common tasks, ready in one click</h2>
+            <p>Open a featured workflow, keep your setup close, and move between tools without losing context.</p>
+          </div>
+          <div class="hero-showcase-stack">
+            <button class="showcase-tool showcase-tool-primary" type="button" data-chip-tool="hash" data-kind="recent">
+              <span class="showcase-kicker">Security</span>
+              <strong>Hash text or files locally</strong>
+              <small>Generate MD5 or SHA checksums in the browser without uploading source material.</small>
+            </button>
+            <button class="showcase-tool" type="button" data-chip-tool="datetime" data-kind="recent">
+              <span class="showcase-kicker">Time</span>
+              <strong>Parse timestamps and compare ranges</strong>
+              <small>Inspect Unix values, UTC output, and exact elapsed time between two moments.</small>
+            </button>
+            <button class="showcase-tool" type="button" data-chip-tool="converter" data-kind="favorite">
+              <span class="showcase-kicker">Measure</span>
+              <strong>Convert units without leaving the page</strong>
+              <small>Switch between length, temperature, storage, speed, and other common categories instantly.</small>
+            </button>
+          </div>
+          <div class="hero-shortcut-panel" aria-label="Workspace shortcuts">
+            <div class="shortcut-pill">
+              <span>/</span>
+              <small>Focus search</small>
+            </div>
+            <div class="shortcut-pill">
+              <span>★</span>
+              <small>Pin favorites</small>
+            </div>
+            <div class="shortcut-pill">
+              <span>↗</span>
+              <small>Copy setup links</small>
+            </div>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -1093,18 +1170,18 @@
     </section>
 
     <section class="workspace-section" id="workspace" aria-labelledby="workspace-title" data-view-mode="shared">
-      <div class="section-heading compact">
-        <p class="eyebrow">Workspace</p>
-        <h2 id="workspace-title">Pinned tools and recent work</h2>
-        <p>Search lives in the header so you can jump between utilities from anywhere. Favorites and recent tools stay on this device.</p>
+      <div class="section-heading compact workspace-section-heading">
+        <p class="eyebrow">Continue</p>
+        <h2 id="workspace-title">Pick up where you left off</h2>
+        <p>Favorites, recent tools, and saved presets turn Aegis into a repeat-use workspace instead of a one-off utility page.</p>
       </div>
       <aside class="workspace-hub" aria-label="Workspace shortcuts">
-        <p class="workspace-hint" id="workspace-hint">Saved presets and share links stay with each tool, while favorites and recents keep the broader toolkit close by.</p>
+        <p class="workspace-hint" id="workspace-hint">Saved presets and share links stay with each tool, while favorites and recents keep the broader toolkit a click away.</p>
         <div class="quick-collections">
           <section class="collection-card" aria-labelledby="favorites-title">
             <div class="collection-header">
               <h2 id="favorites-title">Favorites</h2>
-              <span>Saved on this device</span>
+              <span>Pin the tools you reuse</span>
             </div>
             <div class="chip-list" id="favorite-tools"></div>
           </section>
@@ -1119,25 +1196,55 @@
       </aside>
     </section>
 
+    <section class="section-band workflow-section" id="workflow" aria-labelledby="workflow-title" data-view-mode="home">
+      <div class="section-heading compact">
+        <p class="eyebrow">Workflow</p>
+        <h2 id="workflow-title">Built for fast utility work</h2>
+        <p>Move from “I need to fix this quickly” to a finished answer without changing sites, retyping state, or losing your place.</p>
+      </div>
+      <div class="workflow-grid">
+        <article class="workflow-card">
+          <span class="workflow-step">01</span>
+          <h3>Jump directly to the right tool</h3>
+          <p>Use header search, the tool drawer, or quick-launch cards to get into the workspace without hunting through menus.</p>
+        </article>
+        <article class="workflow-card">
+          <span class="workflow-step">02</span>
+          <h3>Keep repeat setups on-device</h3>
+          <p>Favorites, recent tools, and saved presets make common tasks feel persistent without forcing an account flow.</p>
+        </article>
+        <article class="workflow-card">
+          <span class="workflow-step">03</span>
+          <h3>Share exact configurations when needed</h3>
+          <p>Tool-state links let you hand off a precise setup for collaboration, debugging, or repeatable utility work.</p>
+        </article>
+        <article class="workflow-card">
+          <span class="workflow-step">04</span>
+          <h3>Stay in one consistent interface</h3>
+          <p>Security, text, time, data, and conversion tools all keep the same interaction model, reducing context switching.</p>
+        </article>
+      </div>
+    </section>
+
     <section class="section-band" id="about-aegis" aria-labelledby="about-aegis-title" data-view-mode="home">
       <div class="section-heading">
         <p class="eyebrow">Online Utility Toolkit</p>
         <h2 id="about-aegis-title">Free browser tools for passwords, JSON, encoding, QR codes, time, hashes, and conversions</h2>
-        <p>Aegis brings common utility tasks into one browser workspace so you can generate secure passwords, hash text or files, validate JSON, encode or decode text, create QR codes, compare timestamps, run timers, produce random numbers, generate UUIDs, and convert units without switching between sites.</p>
+        <p>Aegis brings common utility tasks into one polished browser workspace so you can generate secure passwords, hash text or files, validate JSON, encode or decode text, create QR codes, compare timestamps, run timers, produce random numbers, generate UUIDs, and convert units without switching between sites.</p>
       </div>
 
       <div class="seo-grid seo-grid-highlights">
         <article class="seo-card">
           <h3>One place for everyday utilities</h3>
-          <p>The toolkit groups frequently used text, time, number, sharing, and measurement tools into a single searchable interface.</p>
+          <p>The toolkit groups frequently used text, time, number, sharing, and measurement tasks into one searchable interface.</p>
         </article>
         <article class="seo-card">
-          <h3>Browser-based and lightweight</h3>
-          <p>Aegis runs as a static site, which keeps the experience fast to load and easy to deploy on simple hosting.</p>
+          <h3>Local-first by design</h3>
+          <p>Core interactions run in the browser, which keeps common tasks fast and preserves a more private day-to-day workflow.</p>
         </article>
         <article class="seo-card">
           <h3>Built for repeat use</h3>
-          <p>Favorites, recent tools, saved presets, and shareable state links help visitors return to the same utility setup quickly.</p>
+          <p>Favorites, recent tools, saved presets, and shareable state links help you return to the same utility setup quickly.</p>
         </article>
       </div>
     </section>

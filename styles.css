@@ -145,6 +145,24 @@ code {
   font-size: 0.95em;
 }
 
+kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.8rem;
+  min-height: 1.8rem;
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, var(--line));
+  border-radius: 0.6rem;
+  background: color-mix(in srgb, var(--surface-strong) 82%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  color: var(--primary-strong);
+  font-family: 'Sora', 'Manrope', system-ui, sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.12rem 0.42rem;
+}
+
 :focus-visible {
   outline: 2px solid var(--ring);
   outline-offset: 3px;
@@ -388,14 +406,52 @@ code {
 
 .intro-section {
   display: grid;
-  max-width: 760px;
-  gap: 0.75rem;
-  padding: clamp(1.25rem, 3vw, 2rem) 0 0.75rem;
+  max-width: 1180px;
+  gap: 1rem;
+  padding: clamp(1.15rem, 3vw, 2.2rem) 0 1.1rem;
 }
 
-.hero-copy {
+.hero-shell {
   display: grid;
-  gap: 0.5rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  align-items: stretch;
+  max-width: 1040px;
+}
+
+.hero-copy,
+.hero-showcase {
+  display: grid;
+  gap: 1rem;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--line-strong);
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--surface-strong) 99%, rgba(255, 255, 255, 0.04)), color-mix(in srgb, var(--surface) 96%, rgba(255, 255, 255, 0.02)));
+  box-shadow: var(--shadow);
+  padding: clamp(1.15rem, 2.8vw, 1.6rem);
+  isolation: isolate;
+}
+
+.hero-copy::before,
+.hero-showcase::before {
+  content: '';
+  position: absolute;
+  inset: auto auto -25% -10%;
+  width: 18rem;
+  height: 18rem;
+  border-radius: 999px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 22%, transparent), transparent 70%);
+  pointer-events: none;
+  z-index: -1;
+}
+
+.hero-showcase::before {
+  inset: -15% -10% auto auto;
+  width: 16rem;
+  height: 16rem;
+  background: radial-gradient(circle, color-mix(in srgb, var(--accent) 24%, transparent), transparent 68%);
 }
 
 .eyebrow {
@@ -407,21 +463,184 @@ code {
 }
 
 .hero-copy h1 {
-  font-size: clamp(2rem, 4.4vw, 3.4rem);
-  line-height: 0.98;
-  letter-spacing: -0.01em;
+  max-width: 9ch;
+  font-size: clamp(2.2rem, 4.5vw, 3.95rem);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
 }
 
 .hero-lede {
-  max-width: 62ch;
+  max-width: 56ch;
   color: var(--muted-strong);
-  font-size: clamp(0.98rem, 1.6vw, 1.12rem);
+  font-size: clamp(1.02rem, 1.8vw, 1.2rem);
 }
 
 .hero-support {
-  max-width: 62ch;
+  max-width: 58ch;
   color: var(--muted);
-  font-size: 0.92rem;
+  font-size: 0.95rem;
+}
+
+.hero-trust-row,
+.hero-launchpad,
+.hero-shortcut-panel,
+.workflow-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.hero-trust-row {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.hero-trust-pill,
+.quick-launch-card,
+.showcase-tool,
+.shortcut-pill,
+.workflow-card {
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--surface-strong) 94%, transparent);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.035);
+}
+
+.hero-trust-pill {
+  display: grid;
+  gap: 0.3rem;
+  align-content: start;
+  border-radius: 18px;
+  padding: 0.9rem 0.95rem;
+}
+
+.hero-trust-pill strong {
+  font-family: 'Sora', 'Manrope', system-ui, sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.hero-trust-pill span {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.hero-launchpad {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.quick-launch-card,
+.showcase-tool {
+  display: grid;
+  gap: 0.4rem;
+  justify-items: start;
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  border-radius: 18px;
+  color: var(--text);
+  cursor: pointer;
+  padding: 1rem 1.05rem;
+  text-align: left;
+  transition:
+    transform 170ms ease,
+    border-color 170ms ease,
+    background-color 170ms ease,
+    color 170ms ease;
+}
+
+.quick-launch-card strong,
+.showcase-tool strong {
+  display: block;
+  font-size: 0.98rem;
+  font-weight: 800;
+}
+
+.quick-launch-card span,
+.showcase-tool small {
+  display: block;
+  color: var(--muted-strong);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.hero-showcase-head p {
+  color: var(--muted-strong);
+  font-size: 0.86rem;
+  font-weight: 700;
+  line-height: 1.55;
+}
+
+.quick-launch-card:hover,
+.quick-launch-card:focus-visible,
+.showcase-tool:hover,
+.showcase-tool:focus-visible {
+  transform: translateY(-2px);
+  border-color: color-mix(in srgb, var(--primary) 42%, var(--line));
+  background: color-mix(in srgb, var(--primary-soft) 88%, var(--surface-muted));
+}
+
+.hero-showcase {
+  align-content: start;
+}
+
+.hero-showcase-head {
+  display: grid;
+  gap: 0.65rem;
+}
+
+.hero-showcase-head h2 {
+  font-size: clamp(1.45rem, 2.8vw, 2.1rem);
+  line-height: 0.98;
+  letter-spacing: -0.02em;
+}
+
+.hero-showcase-stack {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.8rem;
+}
+
+.showcase-tool-primary {
+  border-color: color-mix(in srgb, var(--primary) 36%, var(--line));
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--primary-soft) 92%, transparent), color-mix(in srgb, var(--surface-muted) 92%, transparent));
+}
+
+.showcase-kicker,
+.workflow-step {
+  color: var(--primary-strong);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.hero-shortcut-panel {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.shortcut-pill {
+  display: grid;
+  gap: 0.35rem;
+  justify-items: start;
+  border-radius: 18px;
+  padding: 0.9rem 0.95rem;
+}
+
+.shortcut-pill span {
+  font-family: 'Sora', 'Manrope', system-ui, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.shortcut-pill small {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.workspace-section-heading h2 {
+  font-size: clamp(1.9rem, 4.8vw, 3rem);
 }
 
 .workspace-hub,
@@ -858,6 +1077,33 @@ html[data-theme='dark'] .button-primary {
 
 .section-band {
   padding: clamp(3rem, 7vw, 5.5rem) 0;
+}
+
+.workflow-section {
+  padding-top: 0.8rem;
+}
+
+.workflow-section .section-heading h2 {
+  font-size: clamp(1.9rem, 4.5vw, 3rem);
+}
+
+.workflow-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.workflow-card {
+  display: grid;
+  gap: 0.65rem;
+  border-radius: 20px;
+  padding: 1.15rem;
+}
+
+.workflow-card h3 {
+  font-size: 1.04rem;
+}
+
+.workflow-card p {
+  color: var(--muted-strong);
 }
 
 .section-heading {
@@ -1738,6 +1984,13 @@ html[data-theme='light'] .continental-signature-copy img {
 }
 
 @media (max-width: 940px) {
+  .hero-trust-row,
+  .hero-shortcut-panel,
+  .hero-showcase-stack,
+  .workflow-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .top-tool-tabs {
     justify-self: stretch;
   }
@@ -1870,6 +2123,12 @@ html[data-theme='light'] .continental-signature-copy img {
     padding-bottom: 0.35rem;
   }
 
+  .hero-copy,
+  .hero-showcase {
+    border-radius: 22px;
+    padding: 1rem;
+  }
+
   .workspace-hub,
   .collection-card,
   .panel-workspace {
@@ -1877,8 +2136,9 @@ html[data-theme='light'] .continental-signature-copy img {
   }
 
   .hero-copy h1 {
-    font-size: clamp(1.9rem, 11vw, 3rem);
-    line-height: 0.95;
+    max-width: 8ch;
+    font-size: clamp(2rem, 10.5vw, 3.05rem);
+    line-height: 0.94;
   }
 
   .hero-lede {
@@ -1904,7 +2164,12 @@ html[data-theme='light'] .continental-signature-copy img {
   .detail-grid,
   .counter-grid,
   .duration-inputs,
-  .quick-collections {
+  .quick-collections,
+  .hero-trust-row,
+  .hero-launchpad,
+  .hero-shortcut-panel,
+  .hero-showcase-stack,
+  .workflow-grid {
     grid-template-columns: 1fr;
   }
 
