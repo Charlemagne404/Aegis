@@ -3,26 +3,26 @@
   "@graph": [
     {
       "@type": "Organization",
-      "@id": "https://charlemagne404.github.io/Aegis/#organization",
+      "@id": "https://aegis.continental-hub.com/#organization",
       "name": "Continental Studios",
-      "url": "https://charlemagne404.github.io/Aegis/",
-      "logo": "https://charlemagne404.github.io/Aegis/assets/icons/icon-512.png"
+      "url": "https://aegis.continental-hub.com/",
+      "logo": "https://aegis.continental-hub.com/assets/icons/icon-512.png"
     },
     {
       "@type": "WebSite",
-      "@id": "https://charlemagne404.github.io/Aegis/#website",
-      "url": "https://charlemagne404.github.io/Aegis/",
+      "@id": "https://aegis.continental-hub.com/#website",
+      "url": "https://aegis.continental-hub.com/",
       "name": "Aegis",
       "description": "Free online utility toolkit for passwords, JSON formatting, QR codes, encoding, hashing, timestamps, random numbers, and unit conversion.",
       "inLanguage": "en",
       "publisher": {
-        "@id": "https://charlemagne404.github.io/Aegis/#organization"
+        "@id": "https://aegis.continental-hub.com/#organization"
       }
     },
     {
       "@type": "SoftwareApplication",
-      "@id": "https://charlemagne404.github.io/Aegis/#webapp",
-      "url": "https://charlemagne404.github.io/Aegis/",
+      "@id": "https://aegis.continental-hub.com/#webapp",
+      "url": "https://aegis.continental-hub.com/",
       "name": "Aegis",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Web Browser",
@@ -51,12 +51,12 @@
         "Unit converter"
       ],
       "publisher": {
-        "@id": "https://charlemagne404.github.io/Aegis/#organization"
+        "@id": "https://aegis.continental-hub.com/#organization"
       }
     },
     {
       "@type": "FAQPage",
-      "@id": "https://charlemagne404.github.io/Aegis/#faq",
+      "@id": "https://aegis.continental-hub.com/#faq",
       "mainEntity": [
         {
           "@type": "Question",

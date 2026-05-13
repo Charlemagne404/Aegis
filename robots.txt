@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://charlemagne404.github.io/Aegis/sitemap.xml
+Sitemap: https://aegis.continental-hub.com/sitemap.xml
