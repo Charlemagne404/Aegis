@@ -32,6 +32,7 @@ const PRIMARY_TOOLS = TOOLS.filter((tool) => tool.primary !== false);
 
 const state = {
   activeTool: TOOLS[0].id,
+  viewMode: 'home',
   favorites: new Set(readStoredJson(STORAGE_KEYS.favorites, [])),
   recentTools: readStoredJson(STORAGE_KEYS.recentTools, []),
   presets: readStoredJson(STORAGE_KEYS.presets, {}),
@@ -536,6 +537,7 @@ function activateTool(toolId, options = {}) {
   if (!tool) return;
 
   state.activeTool = tool.id;
+  setViewMode('tool');
   renderToolTabs();
 
   $$('[data-tool-panel]').forEach((panel) => {
@@ -768,13 +770,11 @@ function renderPanelEnhancements() {
     if (!header || !toolId) return;
 
     const existingWorkspace = $(`[data-panel-workspace="${toolId}"]`, panel);
-    const workspace = existingWorkspace || document.createElement('details');
-    const defaultOpen = window.matchMedia('(min-width: 641px)').matches;
-    const wasOpen = existingWorkspace?.open ?? defaultOpen;
+    const workspace = existingWorkspace || document.createElement('section');
 
     workspace.className = 'panel-workspace';
     workspace.dataset.panelWorkspace = toolId;
-    workspace.open = wasOpen;
+    workspace.setAttribute('aria-label', 'Workspace actions');
     workspace.innerHTML = buildPanelWorkspaceMarkup(toolId);
 
     if (!existingWorkspace) {
@@ -786,18 +786,22 @@ function renderPanelEnhancements() {
 function buildPanelWorkspaceMarkup(toolId) {
   const presets = state.presets[toolId] || [];
   const history = state.history[toolId] || [];
-  const summary = PRESET_TOOL_IDS.has(toolId)
-    ? `${presets.length} preset${presets.length === 1 ? '' : 's'} · ${history.length} saved states`
-    : state.favorites.has(toolId)
-      ? 'Pinned for quick access'
-      : 'Actions and share links';
+  const summaryParts = [];
+  if (state.favorites.has(toolId)) summaryParts.push('Pinned');
+  if (PRESET_TOOL_IDS.has(toolId) && presets.length) {
+    summaryParts.push(`${presets.length} preset${presets.length === 1 ? '' : 's'}`);
+  }
+  if (PRESET_TOOL_IDS.has(toolId) && history.length) {
+    summaryParts.push(`${history.length} recent`);
+  }
+  const summary = summaryParts.join(' · ') || 'Quick actions and saved setup links';
 
   return `
-    <summary class="panel-workspace-summary">
-      <span class="panel-workspace-heading">Workspace</span>
-      <span class="panel-workspace-meta">${escapeHtml(summary)}</span>
-    </summary>
-    <div class="panel-workspace-body">
+    <div class="panel-workspace-bar">
+      <div class="panel-workspace-copy">
+        <span class="panel-workspace-heading">Workspace</span>
+        <span class="panel-workspace-meta">${escapeHtml(summary)}</span>
+      </div>
       <div class="panel-utilities">
         <button class="panel-action" type="button" data-panel-favorite="${toolId}" aria-pressed="${state.favorites.has(toolId)}">${state.favorites.has(toolId) ? 'Pinned' : 'Pin to favorites'}</button>
         <button class="panel-action" type="button" data-panel-share="${toolId}">Copy share link</button>
@@ -805,96 +809,34 @@ function buildPanelWorkspaceMarkup(toolId) {
           ? `<button class="panel-action" type="button" data-panel-save-preset="${toolId}">Save preset</button>`
           : ''}
       </div>
-      <p class="workspace-status" id="workspace-status-${toolId}" aria-live="polite"></p>
-      ${buildWorkspaceJumpMarkup(toolId)}
-      ${PRESET_TOOL_IDS.has(toolId)
-        ? buildToolContextMarkup(toolId)
-        : '<p class="context-empty">Pin this tool or copy a share link when you want to return to the same setup later.</p>'}
     </div>
+    ${buildWorkspaceShortcutMarkup(toolId, presets, history)}
+    <p class="workspace-status" id="workspace-status-${toolId}" aria-live="polite"></p>
   `;
 }
 
-function buildWorkspaceJumpMarkup(toolId) {
-  const launchTools = getWorkspaceJumpTools(toolId);
-  const meta = `${state.favorites.size} pinned · ${state.recentTools.length} recent`;
+function buildWorkspaceShortcutMarkup(toolId, presets, history) {
+  if (!PRESET_TOOL_IDS.has(toolId)) return '';
+
+  const shortcuts = presets.slice(0, 2).map((entry) => `
+    <button class="context-pill" type="button" data-apply-preset="${toolId}" data-entry-id="${entry.id}">
+      ${escapeHtml(entry.name)}
+    </button>
+  `);
+
+  if (history[0]) {
+    shortcuts.push(`
+      <button class="context-pill" type="button" data-apply-history="${toolId}" data-entry-id="${history[0].id}">
+        Last setup
+      </button>
+    `);
+  }
+
+  if (!shortcuts.length) return '';
 
   return `
-    <div class="context-group">
-      <div class="context-meta">
-        <span class="context-label">Quick jump</span>
-        <span class="context-count">${escapeHtml(meta)}</span>
-      </div>
-      <div class="context-pill-row">
-        ${launchTools.length
-          ? launchTools
-              .map(
-                (tool) => `
-                  <button class="context-pill" type="button" data-chip-tool="${tool.id}" data-kind="workspace">
-                    ${escapeHtml(NAV_LABELS[tool.id] || tool.title)}
-                  </button>
-                `,
-              )
-              .join('')
-          : '<p class="context-empty">Pin tools or open a few utilities to build a faster jump list here.</p>'}
-      </div>
-    </div>
-  `;
-}
-
-function getWorkspaceJumpTools(toolId) {
-  const ids = [...new Set([...state.favorites, ...state.recentTools])]
-    .filter((entry) => entry !== toolId);
-
-  const defaults = ['password', 'json', 'timezone', 'random', 'converter'];
-
-  return [...new Set([...ids, ...defaults])]
-    .map((entry) => getTool(entry))
-    .filter((tool, index, list) => tool && tool.primary !== false && list.findIndex((item) => item?.id === tool.id) === index)
-    .slice(0, 6);
-}
-
-function buildToolContextMarkup(toolId) {
-  const presets = state.presets[toolId] || [];
-  const history = state.history[toolId] || [];
-
-  return `
-    <div class="context-group">
-      <div class="context-meta">
-        <span class="context-label">Saved presets</span>
-        <span class="context-count">${presets.length}</span>
-      </div>
-      <div class="context-pill-row">
-        ${presets.length
-          ? presets
-              .map(
-                (entry) => `
-                  <button class="context-pill" type="button" data-apply-preset="${toolId}" data-entry-id="${entry.id}">
-                    ${escapeHtml(entry.name)}
-                  </button>
-                `,
-              )
-              .join('')
-          : '<p class="context-empty">No presets yet. Save a repeatable setup once you have one.</p>'}
-      </div>
-    </div>
-    <div class="context-group">
-      <div class="context-meta">
-        <span class="context-label">Recent states</span>
-        <span class="context-count">${history.length}</span>
-      </div>
-      <div class="context-pill-row">
-        ${history.length
-          ? history
-              .map(
-                (entry) => `
-                  <button class="context-pill" type="button" data-apply-history="${toolId}" data-entry-id="${entry.id}">
-                    ${escapeHtml(entry.label)}
-                  </button>
-                `,
-              )
-              .join('')
-          : '<p class="context-empty">Aegis will remember recent setups here after you adjust this tool.</p>'}
-      </div>
+    <div class="panel-workspace-shortcuts" aria-label="Saved tool shortcuts">
+      ${shortcuts.join('')}
     </div>
   `;
 }
@@ -1010,28 +952,45 @@ function closeToolDrawer() {
 
 function initRouting() {
   const applyRoute = () => {
-    const nextTool = getRouteTool();
-    activateTool(nextTool, { recordRecent: false, syncUrl: false });
-    applyStateFromUrl(nextTool);
+    const route = getRouteState();
+    if (route.viewMode === 'home') {
+      setViewMode('home');
+      if (window.location.hash === '#home') {
+        $('#home')?.scrollIntoView({ block: 'start' });
+      }
+      return;
+    }
+
+    activateTool(route.toolId, { recordRecent: false, syncUrl: false });
+    applyStateFromUrl(route.toolId);
   };
 
   window.addEventListener('hashchange', applyRoute);
   window.addEventListener('popstate', applyRoute);
 
-  activateTool(getRouteTool(), { recordRecent: false, syncUrl: false });
-  applyStateFromUrl(state.activeTool);
+  const route = getRouteState();
+  if (route.viewMode === 'home') {
+    setViewMode('home');
+  } else {
+    activateTool(route.toolId, { recordRecent: false, syncUrl: false });
+    applyStateFromUrl(route.toolId);
+  }
   scheduleUrlSync();
 }
 
-function getRouteTool() {
+function getRouteState() {
   const params = new URLSearchParams(window.location.search);
   const queryTool = params.get('tool');
-  if (TOOLS.some((tool) => tool.id === queryTool)) return queryTool;
+  if (TOOLS.some((tool) => tool.id === queryTool)) {
+    return { viewMode: 'tool', toolId: queryTool };
+  }
 
   const hashTool = window.location.hash.replace('#', '');
-  if (TOOLS.some((tool) => tool.id === hashTool)) return hashTool;
+  if (TOOLS.some((tool) => tool.id === hashTool)) {
+    return { viewMode: 'tool', toolId: hashTool };
+  }
 
-  return state.activeTool;
+  return { viewMode: 'home', toolId: state.activeTool };
 }
 
 function applyStateFromUrl(toolId) {
@@ -1055,6 +1014,13 @@ function scheduleUrlSync() {
 function syncUrlToState() {
   const url = new URL(window.location.href);
   url.search = '';
+
+  if (state.viewMode === 'home') {
+    url.hash = 'home';
+    history.replaceState(null, '', url);
+    return;
+  }
+
   url.searchParams.set('tool', state.activeTool);
 
   const adapter = TOOL_STATE_ADAPTERS[state.activeTool];
@@ -1431,6 +1397,11 @@ function escapeHtml(value) {
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&#39;');
+}
+
+function setViewMode(mode) {
+  state.viewMode = mode;
+  document.body.dataset.view = mode;
 }
 
 function getTool(toolId) {

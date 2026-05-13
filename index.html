@@ -130,7 +130,7 @@
   </script>
   <script src="js/theme-init.js"></script>
 </head>
-<body>
+<body data-view="home">
   <a class="skip-link" href="#main-content">Skip to content</a>
 
   <header class="site-header">
@@ -184,16 +184,20 @@
   </div>
 
   <main id="main-content">
-    <section class="intro-section" id="home">
+    <section class="intro-section" id="home" data-view-mode="home">
       <div class="hero-copy">
         <p class="eyebrow">Privacy-first utilities</p>
         <h1>Aegis Utility Toolkit</h1>
         <p class="hero-lede">Free online tools for passwords, JSON, QR codes, encoding, hashes, UUIDs, timestamps, timers, timezones, random numbers, and unit conversion.</p>
         <p class="hero-support">Runs in your browser. Device-local workspace preferences stay on this device unless you explicitly copy a share link.</p>
       </div>
+      <div class="hero-actions">
+        <a class="button button-primary" href="./?tool=password#password">Open password generator</a>
+        <a class="button button-secondary" href="#tool-directory">Browse included tools</a>
+      </div>
     </section>
 
-    <section class="workbench-section" id="workbench" aria-label="Tool workspace">
+    <section class="workbench-section" id="workbench" aria-label="Tool workspace" data-view-mode="tool">
       <div class="tool-panels">
         <article class="tool-panel" id="password" data-tool-panel="password" role="tabpanel" tabindex="0" aria-labelledby="tab-password">
           <div class="panel-header">
@@ -1088,14 +1092,14 @@
       </div>
     </section>
 
-    <section class="workspace-section" id="workspace" aria-labelledby="workspace-title">
+    <section class="workspace-section" id="workspace" aria-labelledby="workspace-title" data-view-mode="shared">
       <div class="section-heading compact">
         <p class="eyebrow">Workspace</p>
         <h2 id="workspace-title">Pinned tools and recent work</h2>
-        <p>Search now lives in the header so you can jump between tools from anywhere. Favorites and recent tools stay on this device.</p>
+        <p>Search lives in the header so you can jump between utilities from anywhere. Favorites and recent tools stay on this device.</p>
       </div>
       <aside class="workspace-hub" aria-label="Workspace shortcuts">
-        <p class="workspace-hint" id="workspace-hint">Saved presets and share links now stay inside each tool panel, so repeat setups stay close to the work itself.</p>
+        <p class="workspace-hint" id="workspace-hint">Saved presets and share links stay with each tool, while favorites and recents keep the broader toolkit close by.</p>
         <div class="quick-collections">
           <section class="collection-card" aria-labelledby="favorites-title">
             <div class="collection-header">
@@ -1115,7 +1119,7 @@
       </aside>
     </section>
 
-    <section class="section-band" id="about-aegis" aria-labelledby="about-aegis-title">
+    <section class="section-band" id="about-aegis" aria-labelledby="about-aegis-title" data-view-mode="home">
       <div class="section-heading">
         <p class="eyebrow">Online Utility Toolkit</p>
         <h2 id="about-aegis-title">Free browser tools for passwords, JSON, encoding, QR codes, time, hashes, and conversions</h2>
@@ -1138,7 +1142,7 @@
       </div>
     </section>
 
-    <section class="section-band" id="tool-directory" aria-labelledby="tool-directory-title">
+    <section class="section-band" id="tool-directory" aria-labelledby="tool-directory-title" data-view-mode="home">
       <div class="section-heading compact">
         <p class="eyebrow">Tool Directory</p>
         <h2 id="tool-directory-title">Included tools</h2>
@@ -1206,7 +1210,7 @@
       <p class="tool-directory-mobile-note">Showing a shorter list here on mobile. Use search or the All tools drawer for the full toolkit.</p>
     </section>
 
-    <section class="section-band" id="faq" aria-labelledby="faq-title">
+    <section class="section-band" id="faq" aria-labelledby="faq-title" data-view-mode="home">
       <div class="section-heading compact">
         <p class="eyebrow">FAQ</p>
         <h2 id="faq-title">Common questions about Aegis</h2>

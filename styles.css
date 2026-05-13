@@ -81,6 +81,11 @@ body.tool-drawer-open {
   overflow: hidden;
 }
 
+body[data-view='home'] [data-view-mode='tool'],
+body[data-view='tool'] [data-view-mode='home'] {
+  display: none;
+}
+
 ::selection {
   background: var(--primary-soft);
 }
@@ -606,29 +611,23 @@ code {
 
 .panel-workspace {
   display: grid;
+  gap: 0.75rem;
   border-radius: var(--radius-md);
   margin: 0 0 1rem;
+  padding: 0.8rem 0.9rem;
 }
 
-.panel-workspace summary {
-  list-style: none;
-}
-
-.panel-workspace summary::-webkit-details-marker {
-  display: none;
-}
-
-.panel-workspace-summary {
+.panel-workspace-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  cursor: pointer;
-  padding: 0.9rem;
+  gap: 0.9rem;
+  flex-wrap: wrap;
 }
 
-.panel-workspace[open] .panel-workspace-summary {
-  border-bottom: 1px solid var(--line);
+.panel-workspace-copy {
+  display: grid;
+  gap: 0.15rem;
 }
 
 .panel-workspace-heading {
@@ -639,19 +638,17 @@ code {
 .panel-workspace-meta {
   color: var(--muted);
   font-size: 0.76rem;
-  font-weight: 800;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  font-weight: 700;
 }
 
-.panel-workspace-body {
-  display: grid;
-  gap: 0.8rem;
-  padding: 0.9rem;
+.panel-workspace-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
 }
 
 .workspace-status {
-  min-height: 1.2rem;
+  min-height: 1rem;
   color: var(--primary-strong);
   font-size: 0.78rem;
   font-weight: 800;
@@ -1027,6 +1024,19 @@ label textarea {
 .workbench-section {
   padding: 0 0 clamp(3rem, 7vw, 5rem);
   scroll-margin-top: 7.25rem;
+}
+
+body[data-view='tool'] .workspace-section {
+  gap: 0.8rem;
+  padding-top: 0;
+}
+
+body[data-view='tool'] .workspace-section .section-heading {
+  margin-bottom: 0.85rem;
+}
+
+body[data-view='tool'] .workspace-section .section-heading h2 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 .tool-panel {
@@ -1862,8 +1872,7 @@ html[data-theme='light'] .continental-signature-copy img {
 
   .workspace-hub,
   .collection-card,
-  .panel-workspace-summary,
-  .panel-workspace-body {
+  .panel-workspace {
     padding: 0.8rem;
   }
 
@@ -1914,7 +1923,15 @@ html[data-theme='light'] .continental-signature-copy img {
     width: 100%;
   }
 
-  .panel-workspace-summary {
+  .panel-workspace .panel-utilities {
+    flex-direction: row;
+  }
+
+  .panel-workspace .panel-action {
+    width: auto;
+  }
+
+  .panel-workspace-bar {
     align-items: flex-start;
     flex-direction: column;
   }
