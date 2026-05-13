@@ -6,4 +6,12 @@
   } catch {
     document.documentElement.dataset.theme = 'dark';
   }
+
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const requestedTool = params.get('tool') || window.location.hash.replace('#', '');
+    document.documentElement.dataset.view = requestedTool ? 'tool' : 'home';
+  } catch {
+    document.documentElement.dataset.view = 'home';
+  }
 })();

@@ -81,8 +81,8 @@ body.tool-drawer-open {
   overflow: hidden;
 }
 
-body[data-view='home'] [data-view-mode='tool'],
-body[data-view='tool'] [data-view-mode='home'] {
+html[data-view='home'] [data-view-mode='tool'],
+html[data-view='tool'] [data-view-mode='home'] {
   display: none;
 }
 

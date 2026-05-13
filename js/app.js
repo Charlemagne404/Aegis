@@ -1401,6 +1401,7 @@ function escapeHtml(value) {
 
 function setViewMode(mode) {
   state.viewMode = mode;
+  document.documentElement.dataset.view = mode;
   document.body.dataset.view = mode;
 }
 

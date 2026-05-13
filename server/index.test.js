@@ -107,3 +107,24 @@ test('site root serves the existing frontend', async () => {
     await app.close();
   }
 });
+
+test('frontend assets are served with no-cache headers', async () => {
+  const app = await startServer();
+
+  try {
+    const [cssResponse, appResponse, dataResponse] = await Promise.all([
+      fetch(`${app.baseUrl}/styles.css`, { method: 'HEAD' }),
+      fetch(`${app.baseUrl}/js/app.js`, { method: 'HEAD' }),
+      fetch(`${app.baseUrl}/data.json`, { method: 'HEAD' }),
+    ]);
+
+    assert.equal(cssResponse.status, 200);
+    assert.equal(appResponse.status, 200);
+    assert.equal(dataResponse.status, 200);
+    assert.equal(cssResponse.headers.get('cache-control'), 'no-cache');
+    assert.equal(appResponse.headers.get('cache-control'), 'no-cache');
+    assert.equal(dataResponse.headers.get('cache-control'), 'no-cache');
+  } finally {
+    await app.close();
+  }
+});

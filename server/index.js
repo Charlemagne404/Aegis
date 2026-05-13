@@ -215,7 +215,7 @@ function streamFile(res, filePath, isHtml = false, statusCode = 200) {
     'Content-Type': MIME_TYPES[extension] || 'application/octet-stream',
   };
 
-  if (isHtml || extension === '.html') {
+  if (shouldDisableCache(extension, isHtml)) {
     headers['Cache-Control'] = 'no-cache';
   } else {
     headers['Cache-Control'] = 'public, max-age=3600';
@@ -223,6 +223,14 @@ function streamFile(res, filePath, isHtml = false, statusCode = 200) {
 
   res.writeHead(statusCode, headers);
   createReadStream(filePath).pipe(res);
+}
+
+function shouldDisableCache(extension, isHtml) {
+  if (isHtml || extension === '.html') {
+    return true;
+  }
+
+  return ['.css', '.js', '.json', '.xml', '.webmanifest'].includes(extension);
 }
 
 function buildHealthPayload({ config, siteMetadata, startedAt }) {
